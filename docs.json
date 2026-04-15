@@ -112,5 +112,11 @@
       "instagram": "https://www.instagram.com/syntaxia_official/",
       "youtube": "https://www.youtube.com/@Syntaxia_Official"
     }
+  },
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_peX9VdjYBaQDGP4onAsVjkMRvitmPZsq8STchGxp5HLi",
+      "apiHost": "https://ctx.syntaxia.com"
+    }
   }
 }
