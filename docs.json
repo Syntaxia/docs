@@ -8,6 +8,19 @@
     "light": "#3e73da",
     "dark": "#0C8C5E"
   },
+  "fonts": {
+    "body": {
+      "family": "Roobert",
+      "source": "/fonts/Roobert-Regular.woff2",
+      "format": "woff2"
+    },
+    "heading": {
+      "family": "Roobert",
+      "weight": 600,
+      "source": "/fonts/Roobert-SemiBold.woff2",
+      "format": "woff2"
+    }
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
