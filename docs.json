@@ -4,9 +4,9 @@
   "name": "Syntaxia",
   "description": "Documentation for Syntaxia, the operating system for business meaning. Unified truth for go-to-market data.",
   "colors": {
-    "primary": "#18E299",
+    "primary": "#3e73da",
     "light": "#3e73da",
-    "dark": "#0C8C5E"
+    "dark": "#2B5BB5"
   },
   "fonts": {
     "body": {
