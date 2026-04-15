@@ -12,11 +12,18 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Get Started",
         "groups": [
           {
-            "group": "Getting started",
-            "pages": ["index"]
+            "group": "Onboarding",
+            "pages": [
+              "index",
+              "get-started/sign-in",
+              "get-started/organizations",
+              "get-started/connect-source",
+              "get-started/discover-ontology",
+              "get-started/compose"
+            ]
           }
         ]
       }
