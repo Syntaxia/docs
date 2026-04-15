@@ -26,6 +26,36 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Product Guide",
+        "groups": [
+          {
+            "group": "Data Connections",
+            "pages": [
+              "guide/source-systems",
+              "guide/data-pipeline"
+            ]
+          },
+          {
+            "group": "AI and Ontology",
+            "pages": [
+              "guide/ai-providers",
+              "guide/ontology-discovery",
+              "guide/ontology-composition",
+              "guide/anchor"
+            ]
+          },
+          {
+            "group": "Team and Access",
+            "pages": [
+              "guide/authentication",
+              "guide/organizations",
+              "guide/functions",
+              "guide/source-card-scoping"
+            ]
+          }
+        ]
       }
     ]
   },
