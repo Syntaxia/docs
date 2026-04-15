@@ -1,87 +1,76 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Syntaxia",
+  "description": "Documentation for Syntaxia, the operating system for business meaning. Unified truth for go-to-market data.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#18E299",
+    "light": "#3e73da",
+    "dark": "#0C8C5E"
+  },
+  "fonts": {
+    "body": {
+      "family": "Roobert",
+      "source": "/fonts/Roobert-Regular.woff2",
+      "format": "woff2"
+    },
+    "heading": {
+      "family": "Roobert",
+      "weight": 600,
+      "source": "/fonts/Roobert-SemiBold.woff2",
+      "format": "woff2"
+    }
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Get Started",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Onboarding",
             "pages": [
               "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "get-started/sign-in",
+              "get-started/organizations",
+              "get-started/connect-source",
+              "get-started/discover-ontology",
+              "get-started/compose"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Product Guide",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Data Connections",
             "pages": [
-              "api-reference/introduction"
+              "guide/source-systems",
+              "guide/data-pipeline"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "AI and Ontology",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "guide/ai-providers",
+              "guide/ontology-discovery",
+              "guide/ontology-composition",
+              "guide/anchor"
+            ]
+          },
+          {
+            "group": "Team and Access",
+            "pages": [
+              "guide/authentication",
+              "guide/organizations",
+              "guide/functions",
+              "guide/source-card-scoping"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -90,33 +79,44 @@
   "navbar": {
     "links": [
       {
+        "label": "Website",
+        "href": "https://www.syntaxia.com"
+      },
+      {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@syntaxia.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Sign in",
+      "href": "https://app.syntaxia.com"
     }
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/Syntaxia_",
+      "linkedin": "https://www.linkedin.com/company/syntaxia-inc",
+      "instagram": "https://www.instagram.com/syntaxia_official/",
+      "youtube": "https://www.youtube.com/@Syntaxia_Official"
+    }
+  },
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_peX9VdjYBaQDGP4onAsVjkMRvitmPZsq8STchGxp5HLi",
+      "apiHost": "https://ctx.syntaxia.com"
     }
   }
 }
