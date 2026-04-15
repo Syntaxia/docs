@@ -21,6 +21,9 @@
       "format": "woff2"
     }
   },
+  "appearance": {
+    "default": "dark"
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
