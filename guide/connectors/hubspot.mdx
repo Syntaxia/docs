@@ -1,0 +1,85 @@
+---
+title: "HubSpot"
+description: "Connect a HubSpot portal to Syntaxia."
+---
+
+The HubSpot connector links a HubSpot portal to Syntaxia. Use it to bring CRM, marketing, and deal data into your unified ontology. The connector authenticates with HubSpot via OAuth, so you do not need to create or manage an API key yourself.
+
+## Before you start
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You have **Super Admin** access to the HubSpot portal you want to connect, or a user with permission to install OAuth apps.
+- The portal is on a HubSpot tier that exposes the objects you care about. Free portals expose Companies, Contacts, and Deals. Marketing Hub and Sales Hub Pro or higher expose additional fields and pipelines.
+
+<Tip>
+HubSpot portals are unlimited per Syntaxia organization. Connect as many as you need, for example one per business unit or per acquired company.
+</Tip>
+
+## What syncs
+
+| Object | Notes |
+|---|---|
+| `Company` | Companies in your CRM |
+| `Contact` | People associated with companies and deals |
+| `Deal` | Opportunities in your sales pipeline |
+| `Deal pipeline` | Pipeline definitions |
+| `Deal stage` | Stage definitions per pipeline |
+| `Owner` | HubSpot users who own records |
+
+Custom properties on Companies, Contacts, and Deals are synced. Custom objects are not yet supported.
+
+## Connect HubSpot
+
+<Steps>
+  <Step title="Add the source">
+    From your Data Ops command center, click **Add Source**, expand the **HubSpot** card, and enter a connection label like `HubSpot - Marketing` or `HubSpot - Acme`.
+  </Step>
+  <Step title="Authorize Syntaxia">
+    Click **Connect**. You will be redirected to HubSpot. If you belong to multiple portals, HubSpot asks which one to install the integration on. Select the correct portal, review the requested scopes, then click **Connect app**.
+  </Step>
+  <Step title="Return to Syntaxia">
+    HubSpot redirects you back to your command center. The new source card shows status `syncing`.
+  </Step>
+  <Step title="Wait for the initial sync">
+    The first sync usually takes 5 to 30 minutes depending on portal size. The card turns green and switches to `active` once complete.
+  </Step>
+</Steps>
+
+## Required HubSpot scopes
+
+The OAuth consent screen lists every scope Syntaxia requests. The minimum set covers read access to:
+
+- `crm.objects.companies.read`
+- `crm.objects.contacts.read`
+- `crm.objects.deals.read`
+- `crm.objects.owners.read`
+- `crm.schemas.companies.read`
+- `crm.schemas.contacts.read`
+- `crm.schemas.deals.read`
+
+If your portal admin restricts OAuth installs, ask them to approve the Syntaxia app once. After that, any Data Ops user can reconnect without further admin intervention.
+
+## After the first sync
+
+Once your HubSpot source is `active`, you can:
+
+- **Resync** at any time to pull the latest changes.
+- **Run ontology discovery** to analyze the portal and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
+- **Compose** the HubSpot ontology with other source ontologies. See [Ontology composition](/guide/ontology-composition).
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="HubSpot says I do not have permission to install the app">
+    Ask a Super Admin on your HubSpot portal to install the integration once. After the first install, normal users can re-authorize without admin help.
+  </Accordion>
+  <Accordion title="I authorized the wrong portal">
+    Disconnect the source from your Syntaxia command center, then add a new HubSpot source and pick the correct portal during the OAuth flow.
+  </Accordion>
+  <Accordion title="The card is in `error`">
+    HubSpot reported a broken connection. The OAuth grant may have been revoked, or the portal may have been deleted. Click **Reconnect** to start a fresh authorization.
+  </Accordion>
+  <Accordion title="My custom properties are missing">
+    Custom properties on standard objects sync automatically. If a property is missing, confirm that it is enabled on the object in HubSpot and that your authorizing user has read access to it. Then click **Resync** on the source card.
+  </Accordion>
+</AccordionGroup>

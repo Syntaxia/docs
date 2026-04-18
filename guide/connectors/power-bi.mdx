@@ -1,0 +1,59 @@
+---
+title: "Power BI"
+description: "Connect a Microsoft Power BI workspace to Syntaxia."
+---
+
+The Power BI connector links a Microsoft Power BI workspace to Syntaxia. Use it to bring reporting metadata, datasets, and report definitions into your unified ontology so analytics structure can be reconciled alongside CRM data.
+
+<Info>
+Power BI is currently available as a data connector. Full ontology coverage for Power BI artifacts is on the roadmap. You can connect today and your data will be staged in the pipeline; ontology discovery support will be enabled in a future release.
+</Info>
+
+## Before you start
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You have a Microsoft Entra ID account with access to the Power BI workspace you want to connect.
+- The workspace tenant allows third-party OAuth integrations. If your IT team enforces tenant-level conditional access, ask them to allowlist Syntaxia.
+- Your Power BI license tier exposes the API for the artifacts you care about. Pro and Premium tiers expose the full set.
+
+## Connect Power BI
+
+<Steps>
+  <Step title="Add the source">
+    From your Data Ops command center, click **Add Source**, expand the **Power BI** card, and enter a connection label like `Power BI - Finance` or `Power BI - GTM`.
+  </Step>
+  <Step title="Authorize Syntaxia">
+    Click **Connect**. You will be redirected to the Microsoft sign-in flow. Sign in with your Power BI account, choose the tenant if prompted, then click **Accept** to grant the requested permissions.
+  </Step>
+  <Step title="Return to Syntaxia">
+    Microsoft redirects you back to your command center. The new source card shows status `syncing`.
+  </Step>
+  <Step title="Wait for the initial sync">
+    The first sync timing depends on the size of your tenant and the number of workspaces visible to your account. Most tenants finish within 15 to 45 minutes.
+  </Step>
+</Steps>
+
+## Required Microsoft permissions
+
+The OAuth consent screen lists the exact scopes Syntaxia requests. The minimum set covers read access to:
+
+- Workspaces and their membership
+- Datasets and dataset metadata
+- Reports and dashboards
+- Dataflows
+
+If your tenant requires admin consent for new applications, ask a Power BI tenant administrator to approve the Syntaxia app once. After that, normal users can re-authorize without further admin involvement.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Microsoft says admin consent is required">
+    Your Microsoft tenant blocks user-level consent for third-party apps. Ask a Power BI tenant administrator to approve the Syntaxia app, then click **Reconnect** on the source card.
+  </Accordion>
+  <Accordion title="The card is in `error`">
+    Microsoft reported a broken connection, often because the OAuth grant expired or the user lost access to the tenant. Click **Reconnect** and re-authorize.
+  </Accordion>
+  <Accordion title="A workspace I expected is missing">
+    The connector inherits visibility from the authorizing user. If you do not have access to a workspace in Power BI, Syntaxia will not see it either. Have a workspace owner add you as a member, then click **Resync**.
+  </Accordion>
+</AccordionGroup>

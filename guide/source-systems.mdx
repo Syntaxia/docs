@@ -1,6 +1,104 @@
 ---
 title: "Source systems"
-description: "Connect and manage your CRM source systems in Syntaxia."
+description: "Manage the lifecycle of every CRM source connected to Syntaxia."
 ---
 
-A source system is a connected CRM like Salesforce or HubSpot. You connect sources through OAuth, and Syntaxia syncs your data automatically through Fivetran. Each source moves through a lifecycle from pending to active as the connection is established and data begins flowing.
+A **source system** is a connected CRM in Syntaxia. Each source has a type (Salesforce, HubSpot, Pipedrive, Power BI, or Salesforce Sandbox), a label you choose, and a lifecycle that takes it from first authorization through ongoing operation. This page covers how sources behave once they exist. For step-by-step setup of each source type, see the [connectors overview](/guide/connectors/overview).
+
+## Lifecycle
+
+Every source moves through the same set of states. The current state is reflected on the source card on your command center.
+
+| State | What it means |
+|---|---|
+| `pending` | The source has been created in Syntaxia but the OAuth flow has not started. |
+| `authorizing` | OAuth is in progress. You are signing in on the source platform. |
+| `syncing` | The first sync is running, or a manual resync is in progress. |
+| `active` | Data is flowing. This is the steady-state for a healthy source. |
+| `paused` | The connector is temporarily paused. Disconnecting moves a source here. |
+| `error` | The source platform reported a broken connection. Reconnect to recover. |
+
+A source can also be in one of two terminal flags:
+
+- **Disconnected** (`disconnected_at` set): the connector is paused and the source no longer syncs. Data is preserved.
+- **Purging** (`purging_at` set): the connector, the staged data, and the source record are being permanently deleted.
+
+## Source card states at a glance
+
+The source card uses color and motion to telegraph state without you having to read the label.
+
+| Visual | Meaning |
+|---|---|
+| Green dot, steady | `active`. Data is flowing. |
+| Cyan dot, pulsing | Work in progress: syncing, processing, or running ontology discovery. |
+| Amber dot, pulsing | Needs setup: `pending`, `authorizing`, or `error`. |
+| Amber dot, steady | `paused`. The connector is intentionally paused. |
+| Red dot, pulsing | `error` or ontology discovery failed. Action needed. |
+
+## Actions on a source
+
+The actions available on a source depend on your function and role. See [Source card scoping](/guide/source-card-scoping) for the full matrix.
+
+### Resync
+
+Pulls the latest changes from the source platform on demand. Use this when you want fresher data than the next scheduled sync. Available to any Data Ops user.
+
+### Reprocess
+
+Re-runs the staging and counting steps over the data you already have, without pulling new data from the source. Useful after a pipeline upgrade or to recover from a stale count. Restricted to Data Ops admins and owners.
+
+### Run ontology discovery
+
+Kicks off a fresh [ontology discovery](/guide/ontology-discovery) run for the source. Requires an active [AI provider](/guide/ai-providers) for your organization. Restricted to Data Ops admins and owners.
+
+### Reconnect
+
+Restarts the OAuth flow for the source. Use this when the source is in `error`, when you want to switch to a different integration user on the source platform, or when an OAuth grant has been revoked.
+
+### Disconnect
+
+Soft-deletes the source. The connector is paused, the source card disappears from the active list, but all staged data is preserved. You can reconnect later if you change your mind.
+
+A source that was disconnected before its first sync completed is auto-purged, since there is no data worth preserving.
+
+### Permanently delete
+
+Hard-deletes a previously disconnected source. Removes the connector on our managed pipeline, the staged data, and the database record. **This action cannot be undone.** Only available on sources that are already disconnected.
+
+## Per-organization limits
+
+| Connector | Limit |
+|---|---|
+| Salesforce | 4 active connections per organization |
+| Salesforce Sandbox | Unlimited |
+| HubSpot | Unlimited |
+| Pipedrive | Unlimited |
+| Power BI | Unlimited |
+
+When you reach a limit, the **Add Source** card for that connector is disabled and shows `No slots`. Disconnect and purge an unused source to free a slot, or contact [support@syntaxia.com](mailto:support@syntaxia.com) to discuss raising the limit.
+
+## What gets stored where
+
+When a source is active, your data lives in two places:
+
+- **Staged data** in Syntaxia's pipeline (object storage and a counting database). This is what powers the record counts and downstream ontology pipeline. See [Data pipeline](/guide/data-pipeline) for the full path.
+- **Source metadata** in Syntaxia's application database: the label, status, sync timestamps, and ontology snapshots.
+
+Disconnecting a source preserves both. Purging deletes both.
+
+## Recovering from common states
+
+<AccordionGroup>
+  <Accordion title="The card is stuck on `authorizing`">
+    The OAuth flow did not finish. Click **Reconnect** to start a fresh authorization.
+  </Accordion>
+  <Accordion title="The card moved to `error`">
+    The source platform reported a broken connection. The OAuth grant may have been revoked, the integration user's password changed, or API access removed. Click **Reconnect** and re-authorize.
+  </Accordion>
+  <Accordion title="The card has been `syncing` for a long time">
+    Initial syncs on large CRMs can take hours. If a card stays in `syncing` for over six hours, contact [support@syntaxia.com](mailto:support@syntaxia.com) so we can investigate.
+  </Accordion>
+  <Accordion title="I disconnected by mistake">
+    As long as you have not permanently deleted the source, click **Reconnect** on the disconnected source card. Your staged data is intact and the source will resume from where it left off.
+  </Accordion>
+</AccordionGroup>

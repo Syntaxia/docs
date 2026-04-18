@@ -1,0 +1,76 @@
+---
+title: "Pipedrive"
+description: "Connect a Pipedrive account to Syntaxia."
+---
+
+The Pipedrive connector links a Pipedrive company account to Syntaxia. Use it to bring sales pipeline data, including organizations, persons, deals, activities, and users, into your unified ontology.
+
+## Before you start
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You are an **Admin user** on the Pipedrive company you want to connect, or you have permission to authorize OAuth integrations.
+- Your Pipedrive plan supports API access. All paid plans do.
+
+<Tip>
+Pipedrive accounts are unlimited per Syntaxia organization. You can connect multiple companies if your team operates across several Pipedrive workspaces.
+</Tip>
+
+## What syncs
+
+| Object | Notes |
+|---|---|
+| `Organization` | Companies in Pipedrive |
+| `Person` | Contacts associated with organizations and deals |
+| `Deal` | Opportunities in your pipelines |
+| `Activity` | Tasks, calls, meetings, and notes |
+| `User` | Pipedrive users, used for owner attribution |
+
+Custom fields on Organizations, Persons, and Deals are synced.
+
+## Connect Pipedrive
+
+<Steps>
+  <Step title="Add the source">
+    From your Data Ops command center, click **Add Source**, expand the **Pipedrive** card, and enter a connection label like `Pipedrive - SDR Team`.
+  </Step>
+  <Step title="Authorize Syntaxia">
+    Click **Connect**. You will be redirected to Pipedrive. If you are signed in to multiple Pipedrive companies, select the one you want to connect, then click **Allow and install**.
+  </Step>
+  <Step title="Return to Syntaxia">
+    Pipedrive redirects you back to your command center. The new source card shows status `syncing`.
+  </Step>
+  <Step title="Wait for the initial sync">
+    Pipedrive accounts are typically smaller than Salesforce orgs, so the first sync often completes in under 15 minutes. The card turns green and switches to `active` once finished.
+  </Step>
+</Steps>
+
+## Required Pipedrive permissions
+
+The integration installs against the company you select during OAuth. Make sure the authorizing user has at least:
+
+- Read access to **Deals**, **Organizations**, **Persons**, and **Activities** in their permission set.
+- The **Use API** permission, which is granted by default to Admin users.
+
+If your authorizing user has restricted visibility on certain pipelines or deals, Syntaxia will only see what they can see.
+
+## After the first sync
+
+Once your Pipedrive source is `active`, you can:
+
+- **Resync** at any time to pull the latest changes.
+- **Run ontology discovery** to model your Pipedrive structure. See [Ontology discovery](/guide/ontology-discovery).
+- **Compose** with other source ontologies. See [Ontology composition](/guide/ontology-composition).
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The OAuth window shows the wrong company">
+    Sign out of Pipedrive in another tab, then click **Reconnect** on the source card. Pipedrive will prompt you to choose a company before authorizing.
+  </Accordion>
+  <Accordion title="The card is in `error`">
+    Pipedrive reported a broken connection. The user who authorized may have left the company or had their permissions changed. Click **Reconnect** and re-authorize as a current Admin.
+  </Accordion>
+  <Accordion title="Some deals are missing">
+    Check the visibility settings on the affected pipelines and the permission set of the authorizing user. Syntaxia inherits the user's view of Pipedrive.
+  </Accordion>
+</AccordionGroup>

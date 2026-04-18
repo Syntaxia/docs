@@ -1,0 +1,87 @@
+---
+title: "Connectors overview"
+description: "Browse the source systems Syntaxia connects to and how the connection flow works."
+---
+
+A **connector** is the integration between Syntaxia and one of your source systems. You add connectors from the **Add Source** screen in Data Ops, and each one becomes a source card on your command center once it is active.
+
+Syntaxia uses a managed data integration layer to run every connector, so the steps to add a source are nearly identical across CRMs. You authorize Syntaxia on the source platform, your data lands in our pipeline, and your source card moves from `pending` to `active` once the first sync completes.
+
+## Supported sources
+
+Syntaxia supports connectors at three levels of maturity. **Available** connectors are fully wired into the ontology pipeline. **Limited** connectors sync data but do not yet feed into ontology discovery. **Upcoming** connectors are on the roadmap.
+
+### Available
+
+| Connector | Purpose | Per-org limit |
+|---|---|---|
+| [Salesforce](/guide/connectors/salesforce) | Enterprise CRM and sales platform | 4 connections |
+| [Salesforce Sandbox](/guide/connectors/salesforce-sandbox) | Salesforce sandbox testing environment | Unlimited |
+| [HubSpot](/guide/connectors/hubspot) | Inbound marketing, sales, and CRM | Unlimited |
+| [Pipedrive](/guide/connectors/pipedrive) | Sales pipeline management | Unlimited |
+| [Power BI](/guide/connectors/power-bi) | Business intelligence and reporting | Unlimited |
+
+### Limited ontology support
+
+Data syncs are available, but the ontology pipeline does not yet model these systems. You can connect them today and expect ontology coverage in a future release.
+
+- Apollo
+- Clari
+- Gong
+- Marketo
+- Microsoft Power BI (extended)
+- NetSuite
+- Salesforce Marketing Cloud
+
+### Upcoming
+
+These connectors are planned but not yet available in the **Add Source** screen.
+
+- 6sense
+- Attio
+- Microsoft Dynamics 365 CRM
+
+<Tip>
+Need a connector that is not listed? Email [support@syntaxia.com](mailto:support@syntaxia.com) so we can prioritize it.
+</Tip>
+
+## How the connection flow works
+
+Every connector follows the same five-step pattern. The only thing that changes between source systems is which platform you authorize Syntaxia on.
+
+<Steps>
+  <Step title="Open the Add Source screen">
+    From your Data Ops command center, click **Add Source**. You must be in the Data Ops function. Members, admins, and owners can all add sources.
+  </Step>
+  <Step title="Pick the connector">
+    Choose Salesforce, Salesforce Sandbox, HubSpot, Pipedrive, or Power BI from the **Available** list.
+  </Step>
+  <Step title="Name the connection">
+    Enter a connection label like `Salesforce - Production` or `HubSpot - EMEA`. Labels help you tell sources apart on the command center, especially when an organization runs multiple instances of the same CRM.
+  </Step>
+  <Step title="Authorize on the source platform">
+    Click **Connect**. Syntaxia opens a secure authorization window hosted by our managed pipeline partner. Sign in to the source platform and approve the requested scopes. You will be redirected back to Syntaxia automatically.
+  </Step>
+  <Step title="Wait for the first sync">
+    Your source card appears on the command center with status `syncing`. The initial sync usually takes 5 to 30 minutes depending on the size of your CRM. Once complete, the card turns green and shows `active`.
+  </Step>
+</Steps>
+
+## Required role
+
+Adding, reconnecting, or removing a source requires the **Data Ops** function. Within Data Ops:
+
+- **Members** can resync, reconnect, and disconnect sources.
+- **Admins** and **owners** can additionally trigger reprocessing and ontology discovery.
+
+If you do not see the **Add Source** button, you are either not in Data Ops or your role does not permit it. See [Functions](/guide/functions) and [Source card scoping](/guide/source-card-scoping) for the full role matrix.
+
+## Per-source limits
+
+Most connectors are unlimited per organization. Salesforce production is capped at **4 active connections** per org. The **Add Source** screen shows remaining slots next to the Salesforce entry, and the form is disabled when you reach the cap. Disconnecting a source frees a slot only after the source is purged.
+
+## What happens to your data
+
+Once a connector is active, your data flows through the [data pipeline](/guide/data-pipeline). Raw CRM records land in object storage, get normalized into staging tables, are counted, and then surface in the Syntaxia UI. Nothing leaves the pipeline until you ask for it.
+
+When you disconnect a source, the connector is paused and data is preserved. When you purge a source, the connector, the staged data, and the source record are all permanently deleted. See [Source systems](/guide/source-systems) for the full lifecycle.

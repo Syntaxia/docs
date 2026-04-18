@@ -1,0 +1,75 @@
+---
+title: "Salesforce Sandbox"
+description: "Connect a Salesforce sandbox to Syntaxia for testing and validation."
+---
+
+The Salesforce Sandbox connector links a non-production Salesforce environment to Syntaxia. Use it to validate ontology changes, dry-run migrations, or train your team without touching production data. Sandbox connections authenticate against `test.salesforce.com` rather than `login.salesforce.com`, so they are kept on a separate connector to avoid accidental crossover.
+
+For production orgs, use the [Salesforce](/guide/connectors/salesforce) connector.
+
+## Before you start
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You know which sandbox you want to connect: developer, partial copy, or full copy.
+- You have a Salesforce sandbox user with **API Enabled** and read access to the objects you want to sync.
+- The sandbox username includes the sandbox suffix, for example `you@example.com.dev` or `you@example.com.uat`.
+
+<Info>
+Sandbox connections do not count against your Salesforce production limit of 4. You can connect as many sandboxes as you need.
+</Info>
+
+## What syncs
+
+Sandbox connections read the same objects as production:
+
+| Object | Notes |
+|---|---|
+| `Account` | Companies and customers |
+| `Contact` | People associated with accounts |
+| `Lead` | Pre-conversion prospects |
+| `Opportunity` | Deals in your pipeline |
+| `User` | Sandbox users |
+| `Campaign` | Marketing campaigns and members |
+
+Custom fields are synced. Custom objects are not yet supported.
+
+## Connect a sandbox
+
+<Steps>
+  <Step title="Add the source">
+    From your Data Ops command center, click **Add Source**, expand the **Salesforce Sandbox** card, and enter a connection label that names the sandbox, for example `Salesforce - UAT` or `Salesforce - DevSandbox`.
+  </Step>
+  <Step title="Authorize on the sandbox login page">
+    Click **Connect**. Syntaxia redirects you to `test.salesforce.com`. Sign in with your sandbox user, including the sandbox suffix in the username, then click **Allow** on the OAuth consent screen.
+  </Step>
+  <Step title="Return to Syntaxia">
+    You will be redirected back to your command center. The new sandbox card shows status `syncing`.
+  </Step>
+  <Step title="Wait for the initial sync">
+    Sandboxes are usually small, so the first sync often completes in a few minutes. The card turns green and switches to `active` when finished.
+  </Step>
+</Steps>
+
+## Working with sandboxes
+
+Treat sandbox connections as throwaway by design. Common patterns:
+
+- **Test ontology changes**: connect a partial copy sandbox, run [ontology discovery](/guide/ontology-discovery), and review the result before promoting to production.
+- **Validate field mappings**: spin up a developer sandbox with synthetic data to confirm Syntaxia interprets your custom fields the way you expect.
+- **Train your team**: give RevOps a sandbox source to explore the Syntaxia UI without exposing live customer data.
+
+When a sandbox is refreshed in Salesforce, the OAuth grant may be invalidated. If your source card moves to `error` after a refresh, click **Reconnect** to re-authorize.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="`Invalid username or password` on the sandbox login page">
+    Sandbox usernames include a suffix that matches the sandbox name. If your production username is `you@example.com` and your sandbox is `UAT`, sign in with `you@example.com.uat`.
+  </Accordion>
+  <Accordion title="The card moved to `error` after a sandbox refresh">
+    Sandbox refreshes can revoke OAuth grants. Click **Reconnect** on the source card to start a fresh authorization.
+  </Accordion>
+  <Accordion title="I want to swap a sandbox for production">
+    Connect production as a separate source under the [Salesforce](/guide/connectors/salesforce) connector. The sandbox and production sources can coexist, and you can disconnect the sandbox once you are confident in the production setup.
+  </Accordion>
+</AccordionGroup>

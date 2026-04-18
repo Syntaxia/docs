@@ -3,4 +3,80 @@ title: "Connect a source"
 description: "Connect your first CRM source system to Syntaxia."
 ---
 
-Syntaxia connects to your CRM through OAuth. You can connect Salesforce or HubSpot as a source system. Once connected, Syntaxia syncs your data automatically through Fivetran. Your source moves through a lifecycle from pending to active as the initial sync completes.
+A **source** is one of your CRMs, like Salesforce or HubSpot, plugged into Syntaxia. You connect a source through OAuth, name it, and let the first sync run. Once the source card on your command center turns green, you are ready to discover an ontology.
+
+This guide walks through your first connection. For per-connector details and troubleshooting, see the [connectors overview](/guide/connectors/overview).
+
+## Before you start
+
+- You are signed in to Syntaxia.
+- You belong to the **Data Ops** function. Adding sources is a Data Ops action. See [Functions](/guide/functions) if you need to add yourself.
+- You can sign in to the source platform you plan to connect, with permission to authorize a third-party integration. The exact role varies by platform; the per-connector pages list specifics.
+
+## Pick a connector
+
+From your Data Ops command center, click **Add Source**. The connector picker lists every supported source.
+
+| Connector | When to use it |
+|---|---|
+| [Salesforce](/guide/connectors/salesforce) | Production Salesforce orgs (`login.salesforce.com`). Capped at 4 per organization. |
+| [Salesforce Sandbox](/guide/connectors/salesforce-sandbox) | Salesforce sandboxes (`test.salesforce.com`). Unlimited. |
+| [HubSpot](/guide/connectors/hubspot) | HubSpot portals across any Hub. Unlimited. |
+| [Pipedrive](/guide/connectors/pipedrive) | Pipedrive companies. Unlimited. |
+| [Power BI](/guide/connectors/power-bi) | Microsoft Power BI workspaces. Unlimited. |
+
+Expand the card for the connector you want.
+
+## Name the connection
+
+Enter a connection label. The label is what you see on the command center, so make it specific.
+
+- Good: `Salesforce - Production`, `HubSpot - EMEA`, `Pipedrive - SDR Team`
+- Less good: `My CRM`, `Source 1`
+
+You can rename the source later, but a clear label saves headaches when you connect more than one instance of the same CRM.
+
+## Authorize Syntaxia
+
+Click **Connect**. Syntaxia opens a secure authorization window hosted by our managed pipeline partner, then redirects you to the source platform's OAuth flow. You will:
+
+1. Sign in to the source platform if you are not already signed in.
+2. Pick the right account, tenant, or portal if the platform asks.
+3. Review the requested scopes and approve the integration.
+
+Syntaxia receives an OAuth grant from the source platform. We never see or store your password.
+
+When you approve, you are redirected back to your Syntaxia command center. The new source card appears with status `syncing`.
+
+## Wait for the first sync
+
+The initial sync pulls a full snapshot of your data into Syntaxia's pipeline. Timing depends on how big your CRM is.
+
+| Source size | Typical first-sync time |
+|---|---|
+| Small (under 50k records) | A few minutes |
+| Medium (50k to 500k records) | 5 to 30 minutes |
+| Large (over 500k records) | 30 minutes to a few hours |
+
+While the first sync runs, the source card shows a pulsing cyan dot and a `Syncing...` label. You can leave the page; Syntaxia will keep working in the background.
+
+## Confirm the source is healthy
+
+When the first sync completes, the source card turns green and the status switches to `active`. You will see:
+
+- A green status dot.
+- The total record count, broken out by object.
+- The time of the most recent sync.
+
+If the card moves to `error` or stays in `authorizing`, see the troubleshooting section on the per-connector page.
+
+## Next steps
+
+<Columns cols={2}>
+  <Card title="Discover your ontology" icon="brain" href="/get-started/discover-ontology">
+    Run AI-powered analysis on your newly connected source.
+  </Card>
+  <Card title="Connector reference" icon="plug" href="/guide/connectors/overview">
+    Browse per-connector setup guides and troubleshooting.
+  </Card>
+</Columns>

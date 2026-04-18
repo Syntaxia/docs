@@ -54,6 +54,17 @@
             ]
           },
           {
+            "group": "Connectors",
+            "pages": [
+              "guide/connectors/overview",
+              "guide/connectors/salesforce",
+              "guide/connectors/salesforce-sandbox",
+              "guide/connectors/hubspot",
+              "guide/connectors/pipedrive",
+              "guide/connectors/power-bi"
+            ]
+          },
+          {
             "group": "AI and Ontology",
             "pages": [
               "guide/ai-providers",

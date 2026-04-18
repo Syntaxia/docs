@@ -1,0 +1,89 @@
+---
+title: "Salesforce"
+description: "Connect a Salesforce production org to Syntaxia."
+---
+
+The Salesforce connector links a production Salesforce org to Syntaxia. Use it for live revenue data: accounts, contacts, leads, opportunities, users, and campaigns. For sandbox or developer orgs, use the [Salesforce Sandbox](/guide/connectors/salesforce-sandbox) connector instead, which authenticates against `test.salesforce.com`.
+
+## Before you start
+
+Confirm the following before opening the **Add Source** screen.
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- Your organization has fewer than **4 active Salesforce connections**. Salesforce production is capped per org.
+- You have, or can borrow, a Salesforce user with the **API Enabled** profile permission. The user does not need to be a System Administrator, but they must have read access to the objects you want Syntaxia to see.
+- Pop-ups are not blocked for `app.syntaxia.com`. The authorization window opens in a redirect.
+
+<Info>
+The Salesforce user you authorize with becomes the integration user. Their permission set determines what Syntaxia can read. We recommend creating a dedicated Salesforce integration user with read-only access to the objects below.
+</Info>
+
+## What syncs
+
+The Salesforce connector reads these standard objects:
+
+| Object | Notes |
+|---|---|
+| `Account` | Companies and customers |
+| `Contact` | People associated with accounts |
+| `Lead` | Pre-conversion prospects |
+| `Opportunity` | Deals in your pipeline |
+| `User` | Salesforce users, used for owner attribution |
+| `Campaign` | Marketing campaigns and members |
+
+Custom fields on these objects are also synced. Custom objects are not yet supported.
+
+## Connect Salesforce
+
+<Steps>
+  <Step title="Add the source">
+    From your Data Ops command center, click **Add Source**, expand the **Salesforce** card, and enter a connection label. We recommend something like `Salesforce - Production` or `Salesforce - HQ` so it is easy to identify on the command center.
+  </Step>
+  <Step title="Authorize Syntaxia">
+    Click **Connect**. You will be redirected to the Salesforce login page. Sign in with your integration user, then click **Allow** on the OAuth consent screen.
+  </Step>
+  <Step title="Return to Syntaxia">
+    After approving access, you will be redirected back to your command center. The new source card shows status `syncing` while the first sync runs.
+  </Step>
+  <Step title="Wait for the initial sync">
+    The first sync usually takes 5 to 30 minutes. Larger orgs with high record counts can take longer. The card turns green and switches to `active` once the sync finishes.
+  </Step>
+</Steps>
+
+## Required Salesforce permissions
+
+The integration user needs these profile or permission set entries:
+
+- **API Enabled**
+- **View All** for `Account`, `Contact`, `Lead`, `Opportunity`, `User`, and `Campaign` (or the equivalent object-level read access)
+- **View All Users** if you want owner names to resolve correctly
+
+If you see records missing from the Syntaxia UI after the first sync, the most common cause is a missing object-level read permission on the integration user.
+
+## After the first sync
+
+Once your Salesforce source is `active`, you can:
+
+- **Resync** at any time from the source card to pull the latest changes.
+- **Run ontology discovery** to analyze your Salesforce data and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
+- **Compose** the Salesforce ontology with other source ontologies into a unified L3. See [Ontology composition](/guide/ontology-composition).
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The OAuth window does not open">
+    Check that pop-ups are not blocked for `app.syntaxia.com`, then click **Reconnect** on the source card.
+  </Accordion>
+  <Accordion title="The source card is stuck on `authorizing`">
+    The OAuth flow did not complete. Click **Reconnect** on the source card to start a fresh authorization.
+  </Accordion>
+  <Accordion title="The source card is in `error`">
+    Salesforce reported a broken connection. The integration user's password may have changed, the OAuth grant may have been revoked, or API access may have been removed. Click **Reconnect** and re-authorize.
+  </Accordion>
+  <Accordion title="No slots available">
+    Your organization has 4 active Salesforce production connections. Disconnect and purge an unused source to free a slot, or contact [support@syntaxia.com](mailto:support@syntaxia.com) to discuss raising the limit.
+  </Accordion>
+  <Accordion title="The first sync seems too small">
+    Verify the integration user's object-level read access in Salesforce. Records the user cannot see in Salesforce will not appear in Syntaxia.
+  </Accordion>
+</AccordionGroup>
