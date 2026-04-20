@@ -1,59 +1,164 @@
 ---
 title: "Power BI"
-description: "Connect a Microsoft Power BI workspace to Syntaxia."
+description: "Connect a Microsoft Power BI tenant to Syntaxia."
 ---
 
-The Power BI connector links a Microsoft Power BI workspace to Syntaxia. Use it to bring reporting metadata, datasets, and report definitions into your unified ontology so analytics structure can be reconciled alongside CRM data.
+The Power BI connector links a Microsoft Power BI tenant to Syntaxia. Use it to bring workspaces, datasets, reports, dashboards, and dataflow metadata into your unified ontology so analytics structure can be reconciled alongside CRM data.
 
 <Info>
-Power BI is currently available as a data connector. Full ontology coverage for Power BI artifacts is on the roadmap. You can connect today and your data will be staged in the pipeline; ontology discovery support will be enabled in a future release.
+Power BI is currently available as a data connector. Full ontology coverage for Power BI artifacts is on the roadmap. You can connect today and your data will be staged in the pipeline. Ontology discovery support will be enabled in a future release.
 </Info>
 
 ## Before you start
 
-- You are signed in to Syntaxia under the **Data Ops** function.
-- You have a Microsoft Entra ID account with access to the Power BI workspace you want to connect.
-- The workspace tenant allows third-party OAuth integrations. If your IT team enforces tenant-level conditional access, ask them to allowlist Syntaxia.
-- Your Power BI license tier exposes the API for the artifacts you care about. Pro and Premium tiers expose the full set.
+Connecting Power BI requires a one-time setup in the Microsoft Entra admin center and the Power BI admin portal. You will need access to both.
 
-## Connect Power BI
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You have **Microsoft Entra ID** admin rights, or someone who does can complete the Azure steps with you.
+- You have **Power BI tenant administrator** access, or someone who does can toggle the required admin settings.
+- Your Power BI tenant uses a **Pro**, **Premium**, or **Fabric** capacity. These tiers expose the admin APIs Syntaxia reads from.
+
+<Warning>
+The Power BI connector authenticates as a service principal, not an interactive user. You cannot connect Power BI with a personal Microsoft account. A tenant admin must complete the Azure and Power BI configuration below before the source can sync.
+</Warning>
+
+## What syncs
+
+Once connected, Syntaxia ingests metadata from your Power BI tenant, including:
+
+| Entity | Notes |
+|---|---|
+| Workspaces | Names, IDs, and membership |
+| Datasets | Dataset metadata and schema |
+| Reports | Report definitions and workspace assignment |
+| Dashboards | Dashboard metadata and tiles |
+| Dataflows | Dataflow definitions |
+| Capacities | Premium and Fabric capacity assignments |
+
+Syntaxia reads metadata only. Row-level data inside datasets is not pulled.
+
+## Set up Power BI for Syntaxia
+
+Work through these four stages in order. You will collect three values along the way, **Tenant ID**, **Client ID**, and **Client Secret**, which Syntaxia needs to finish the connection.
+
+### Stage 1: Register an application in Microsoft Entra
+
+<Steps>
+  <Step title="Open the Entra admin center">
+    Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) with an account that can register applications.
+  </Step>
+  <Step title="Create a new app registration">
+    Go to **Identity** &rarr; **Applications** &rarr; **App registrations**, then click **New registration**.
+
+    Enter a name like `Syntaxia Power BI Connector`, leave the default **Single tenant** option selected, and click **Register**.
+  </Step>
+  <Step title="Copy the Tenant ID and Client ID">
+    From the app's **Overview** page, copy the **Directory (tenant) ID** and the **Application (client) ID**. Save them somewhere you can paste from later.
+  </Step>
+  <Step title="Create a client secret">
+    In the app's left menu, click **Certificates & secrets** &rarr; **New client secret**. Set a description and expiry, then click **Add**.
+
+    Copy the **Value** of the new secret immediately. Microsoft will hide it after you leave the page.
+  </Step>
+</Steps>
+
+### Stage 2: Create a security group for the app
+
+Power BI grants service principals access through a security group, not directly.
+
+<Steps>
+  <Step title="Create the group">
+    In the Entra admin center, go to **Identity** &rarr; **Groups** &rarr; **All groups** &rarr; **New group**.
+
+    Set the **Group type** to **Security** and give it a name like `Syntaxia Power BI Access`.
+  </Step>
+  <Step title="Add the app to the group">
+    Under **Members**, add the app registration you just created. Click **Create**.
+  </Step>
+</Steps>
+
+### Stage 3: Enable the required Power BI tenant settings
+
+<Steps>
+  <Step title="Open the Power BI admin portal">
+    Sign in to [Power BI](https://app.powerbi.com) as a tenant admin. Click the settings gear, then **Admin portal**, then **Tenant settings**.
+  </Step>
+  <Step title="Allow service principals to use Power BI APIs">
+    Find **Developer settings** &rarr; **Allow service principals to use Power BI APIs**.
+
+    Set the toggle to **Enabled** and apply it to the `Syntaxia Power BI Access` security group you created. Click **Apply**.
+  </Step>
+  <Step title="Allow service principals to use read-only admin APIs">
+    Find **Admin API settings** &rarr; **Service principals can access read-only admin APIs**.
+
+    Set the toggle to **Enabled**, choose **Specific security groups**, add `Syntaxia Power BI Access`, and click **Apply**.
+  </Step>
+  <Step title="Enhance admin API responses with detailed metadata">
+    In the same **Admin API settings** section, enable **Enhance admin APIs responses with detailed metadata** and **Enhance admin APIs responses with DAX and mashup expressions**.
+
+    These settings let Syntaxia read dataset schema details that feed ontology discovery.
+  </Step>
+</Steps>
+
+<Info>
+Power BI tenant settings can take up to 15 minutes to propagate. If the Syntaxia connection fails on first attempt, wait a few minutes and try again.
+</Info>
+
+### Stage 4: Grant workspace access
+
+The service principal only sees workspaces it has been added to as a member or admin. For organization-wide visibility, add the `Syntaxia Power BI Access` security group to every workspace you want Syntaxia to see, or use a **Workspace access** policy at the tenant level.
+
+At minimum, add the security group as a **Member** of the workspaces you plan to include in ontology discovery.
+
+## Connect Power BI in Syntaxia
 
 <Steps>
   <Step title="Add the source">
     From your Data Ops command center, click **Add Source**, expand the **Power BI** card, and enter a connection label like `Power BI - Finance` or `Power BI - GTM`.
   </Step>
-  <Step title="Authorize Syntaxia">
-    Click **Connect**. You will be redirected to the Microsoft sign-in flow. Sign in with your Power BI account, choose the tenant if prompted, then click **Accept** to grant the requested permissions.
-  </Step>
-  <Step title="Return to Syntaxia">
-    Microsoft redirects you back to your command center. The new source card shows status `syncing`.
+  <Step title="Enter your credentials">
+    Paste the three values you collected in Stage 1:
+
+    - **Tenant ID**
+    - **Client ID**
+    - **Client Secret**
+
+    Click **Connect**.
   </Step>
   <Step title="Wait for the initial sync">
-    The first sync timing depends on the size of your tenant and the number of workspaces visible to your account. Most tenants finish within 15 to 45 minutes.
+    The source card shows status `syncing` while Syntaxia pulls the first batch of metadata. Most tenants finish within 15 to 45 minutes. The card turns green and switches to `active` once the sync finishes.
   </Step>
 </Steps>
 
-## Required Microsoft permissions
+## After the first sync
 
-The OAuth consent screen lists the exact scopes Syntaxia requests. The minimum set covers read access to:
+Once your Power BI source is `active`, you can:
 
-- Workspaces and their membership
-- Datasets and dataset metadata
-- Reports and dashboards
-- Dataflows
-
-If your tenant requires admin consent for new applications, ask a Power BI tenant administrator to approve the Syntaxia app once. After that, normal users can re-authorize without further admin involvement.
+- **Resync** at any time from the source card to pull the latest metadata changes.
+- **Reconnect** if the client secret expires. You will need to generate a new secret in Entra and paste it into Syntaxia.
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Microsoft says admin consent is required">
-    Your Microsoft tenant blocks user-level consent for third-party apps. Ask a Power BI tenant administrator to approve the Syntaxia app, then click **Reconnect** on the source card.
+  <Accordion title="`Unauthorized` or `Forbidden` errors on first sync">
+    The service principal is missing access. Confirm that:
+
+    - **Allow service principals to use Power BI APIs** is enabled for the security group.
+    - **Service principals can access read-only admin APIs** is enabled for the security group.
+    - The security group is a member of at least one workspace.
+
+    Tenant settings can take up to 15 minutes to take effect. Wait, then click **Reconnect**.
   </Accordion>
-  <Accordion title="The card is in `error`">
-    Microsoft reported a broken connection, often because the OAuth grant expired or the user lost access to the tenant. Click **Reconnect** and re-authorize.
+  <Accordion title="The source card is in `error`">
+    The most common causes are an expired client secret or a revoked app registration. Generate a new secret in Entra, then click **Reconnect** and paste the new value.
   </Accordion>
   <Accordion title="A workspace I expected is missing">
-    The connector inherits visibility from the authorizing user. If you do not have access to a workspace in Power BI, Syntaxia will not see it either. Have a workspace owner add you as a member, then click **Resync**.
+    The connector only sees workspaces the service principal is a member of. Add `Syntaxia Power BI Access` as a member of the missing workspace, then click **Resync**.
+  </Accordion>
+  <Accordion title="Dataset schemas look empty">
+    Enable **Enhance admin APIs responses with detailed metadata** and **Enhance admin APIs responses with DAX and mashup expressions** in the Power BI admin portal. Then click **Resync**.
+  </Accordion>
+  <Accordion title="Tenant admin cannot find the toggle">
+    Some older tenants expose the developer and admin API settings under **Tenant settings** &rarr; **Admin API settings**. Search the page for `service principal` to jump to the relevant rows.
   </Accordion>
 </AccordionGroup>
