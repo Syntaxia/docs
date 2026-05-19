@@ -13,21 +13,50 @@ Syntaxia exposes a read-only Model Context Protocol server so coding agents and 
 
 ## Authentication
 
-Every MCP request must include an `Authorization: Bearer <token>` header. The token is bound to a user-and-org pair, so it determines both the org context and the role the LLM operates under.
+Syntaxia supports two authentication paths:
 
-Sign in to your workspace, then visit **Settings → Integrations** to generate a token.
+- **OAuth 2.1** (recommended for Claude.ai web). The client registers itself, you approve consent in Syntaxia, and the access token is issued and stored automatically. Nothing to copy or paste.
+- **Bearer token** (Claude Desktop, Claude Code, Cursor, VS Code). You generate a token under **Settings → Integrations** and put it in the client's config.
 
-<Card title="Sign in to get a token" icon="key" href="https://app.syntaxia.com/signin" horizontal>
-  Generate a Syntaxia MCP token from Settings → Integrations after signing in.
+Both paths bind the resulting token to a user-and-org pair, so the token alone determines what data Claude sees. To connect Claude to a different organization, generate a new token (or re-authorize) for that workspace.
+
+<Card title="Sign in to Syntaxia" icon="key" href="https://app.syntaxia.com/signin" horizontal>
+  Generate a token at **Settings → Integrations**, or initiate an OAuth flow from the Claude.ai connector dialog.
 </Card>
 
 ## Client setup
 
-Configuration snippets for the most common MCP clients. The endpoint is the same for all of them. Replace `<your_token>` with the token you generated under Settings → Integrations.
+Tabs are organized from easiest to most-control. The endpoint is the same for all clients: `https://app.syntaxia.com/mcp`.
 
 <Tabs>
+  <Tab title="Claude.ai web">
+    Claude.ai uses OAuth 2.1 with Dynamic Client Registration. You don't need to generate or paste a token.
+
+    <Steps>
+      <Step title="Open the connector dialog">
+        In Claude.ai, go to **Settings → Connectors** and click **Add custom connector**.
+      </Step>
+      <Step title="Enter the endpoint">
+        Name the connector (eg. `Syntaxia`) and paste the URL:
+
+        ```
+        https://app.syntaxia.com/mcp
+        ```
+
+        Leave **OAuth Client ID** and **OAuth Client Secret** empty under Advanced settings. Claude will register itself automatically.
+      </Step>
+      <Step title="Approve consent">
+        Click **Add**. Claude opens a Syntaxia sign-in popup. After you sign in, the consent screen asks which organization to authorize. Pick one and click **Allow**.
+      </Step>
+      <Step title="Connected">
+        The connector status flips to **Connected** and the four MCP tools (`read_profile`, `list_accounts`, `search_accounts`, `read_account`) become available to Claude.
+      </Step>
+    </Steps>
+
+    To switch organizations, click **Revoke** on the connector card in Claude.ai, then re-add it and pick the other organization on the consent screen.
+  </Tab>
   <Tab title="Claude Desktop">
-    Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows) and add a Syntaxia entry under `mcpServers`.
+    Generate a token at **Settings → Integrations** in Syntaxia first. Then edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows) and add a Syntaxia entry under `mcpServers`. Replace `<your_token>` with the token you just generated.
 
     ```json
     {
@@ -49,14 +78,14 @@ Configuration snippets for the most common MCP clients. The endpoint is the same
     Restart Claude Desktop after editing.
   </Tab>
   <Tab title="Claude Code">
-    Register Syntaxia with the Claude Code CLI. Run this once per machine.
+    Generate a token at **Settings → Integrations** in Syntaxia, then register Syntaxia with the Claude Code CLI. Run this once per machine, substituting `<your_token>`.
 
     ```bash
     claude mcp add syntaxia --transport http https://app.syntaxia.com/mcp --header "Authorization: Bearer <your_token>"
     ```
   </Tab>
   <Tab title="Cursor">
-    Add a `.cursor/mcp.json` file at your project root (or in `~/.cursor/mcp.json` for global use).
+    Generate a token at **Settings → Integrations** in Syntaxia first. Then add a `.cursor/mcp.json` file at your project root (or in `~/.cursor/mcp.json` for global use), substituting `<your_token>`.
 
     ```json
     {
@@ -74,7 +103,7 @@ Configuration snippets for the most common MCP clients. The endpoint is the same
     Reload Cursor after saving.
   </Tab>
   <Tab title="VS Code">
-    Add a `.vscode/mcp.json` file at your workspace root.
+    Generate a token at **Settings → Integrations** in Syntaxia first. Then add a `.vscode/mcp.json` file at your workspace root. VS Code prompts for the token on first connection.
 
     ```json
     {
@@ -97,8 +126,6 @@ Configuration snippets for the most common MCP clients. The endpoint is the same
       ]
     }
     ```
-
-    VS Code prompts for the token on first connection.
   </Tab>
 </Tabs>
 
