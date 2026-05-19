@@ -1,0 +1,199 @@
+---
+title: "MCP server"
+description: "Connect coding agents and chat clients to your reconciled CRM data over the Model Context Protocol."
+---
+
+Syntaxia exposes a read-only Model Context Protocol server so coding agents and chat clients can browse reconciled CRM accounts, contacts, reps, and opportunities from the org you authenticate as.
+
+| | |
+|---|---|
+| **Endpoint** | `https://app.syntaxia.com/mcp` |
+| **Transport** | HTTP (streamable, JSON-RPC) |
+| **Tools** | [`read_profile`](#read-profile), [`list_accounts`](#list-accounts), [`search_accounts`](#search-accounts), [`read_account`](#read-account) |
+
+## Authentication
+
+Every MCP request must include an `Authorization: Bearer <token>` header. The token is bound to a user-and-org pair, so it determines both the org context and the role the LLM operates under.
+
+Sign in to your workspace, then visit **Settings → Integrations** to generate a token.
+
+<Card title="Sign in to get a token" icon="key" href="https://app.syntaxia.com/signin" horizontal>
+  Generate a Syntaxia MCP token from Settings → Integrations after signing in.
+</Card>
+
+## Client setup
+
+Configuration snippets for the most common MCP clients. The endpoint is the same for all of them. Replace `<your_token>` with the token you generated under Settings → Integrations.
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows) and add a Syntaxia entry under `mcpServers`.
+
+    ```json
+    {
+      "mcpServers": {
+        "syntaxia": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-remote",
+            "https://app.syntaxia.com/mcp",
+            "--header",
+            "Authorization: Bearer <your_token>"
+          ]
+        }
+      }
+    }
+    ```
+
+    Restart Claude Desktop after editing.
+  </Tab>
+  <Tab title="Claude Code">
+    Register Syntaxia with the Claude Code CLI. Run this once per machine.
+
+    ```bash
+    claude mcp add syntaxia --transport http https://app.syntaxia.com/mcp --header "Authorization: Bearer <your_token>"
+    ```
+  </Tab>
+  <Tab title="Cursor">
+    Add a `.cursor/mcp.json` file at your project root (or in `~/.cursor/mcp.json` for global use).
+
+    ```json
+    {
+      "mcpServers": {
+        "syntaxia": {
+          "url": "https://app.syntaxia.com/mcp",
+          "headers": {
+            "Authorization": "Bearer <your_token>"
+          }
+        }
+      }
+    }
+    ```
+
+    Reload Cursor after saving.
+  </Tab>
+  <Tab title="VS Code">
+    Add a `.vscode/mcp.json` file at your workspace root.
+
+    ```json
+    {
+      "servers": {
+        "syntaxia": {
+          "type": "http",
+          "url": "https://app.syntaxia.com/mcp",
+          "headers": {
+            "Authorization": "Bearer ${input:syntaxia_token}"
+          }
+        }
+      },
+      "inputs": [
+        {
+          "id": "syntaxia_token",
+          "type": "promptString",
+          "description": "Syntaxia MCP token",
+          "password": true
+        }
+      ]
+    }
+    ```
+
+    VS Code prompts for the token on first connection.
+  </Tab>
+</Tabs>
+
+## Tools
+
+Always call `search_accounts` before `read_account` unless you already have a `unified_account_id` in context.
+
+### read_profile
+
+Returns the authenticated user's identity, organization, and role.
+
+No arguments.
+
+```json Example response
+{
+  "identity_email": "user@acme.com",
+  "name": "Jane Doe",
+  "organization": { "slug": "0000001", "name": "Acme" },
+  "role": "owner"
+}
+```
+
+### list_accounts
+
+Lists active unified accounts in the authenticated organization, paginated.
+
+<ParamField body="limit" type="integer" default="20">
+  Page size (max 100).
+</ParamField>
+
+<ParamField body="offset" type="integer" default="0">
+  Row offset for pagination.
+</ParamField>
+
+<ParamField body="source_system_id" type="uuid">
+  Optional. Restrict to clusters with a member contributed by this source.
+</ParamField>
+
+```json Example response
+{
+  "accounts": [
+    {
+      "unified_account_id": "8f3c...",
+      "canonical_name": "Acme Corp",
+      "canonical_domain": "acme.com",
+      "member_count": 2,
+      "contact_count": 14,
+      "opportunity_total_amount": "120000.00",
+      "updated_at": "2026-05-13T10:21:00Z"
+    }
+  ],
+  "pagination": { "limit": 20, "offset": 0, "total": 187 }
+}
+```
+
+### search_accounts
+
+Fuzzy-searches unified accounts by name (pg_trgm similarity).
+
+<ParamField body="query" type="string" required>
+  Search query (1 to 100 characters).
+</ParamField>
+
+<ParamField body="limit" type="integer" default="10">
+  Page size (max 50).
+</ParamField>
+
+```json Example response
+{
+  "matches": [
+    {
+      "unified_account_id": "8f3c...",
+      "canonical_name": "Acme Corp",
+      "canonical_domain": "acme.com",
+      "similarity": 0.9123
+    }
+  ],
+  "query": "acme"
+}
+```
+
+### read_account
+
+Returns the full reconciled payload for one unified account.
+
+<ParamField body="unified_account_id" type="uuid" required>
+  Unified account UUID, typically obtained from `search_accounts` or `list_accounts`.
+</ParamField>
+
+```json Example response
+{
+  "account": { "id": "8f3c...", "name": "Acme Corp", "domain": "acme.com", "...": "..." },
+  "contacts": [ { "...": "..." } ],
+  "reps": [ { "...": "..." } ],
+  "opportunities": [ { "...": "..." } ],
+  "relationships": { "...": "..." }
+}
+```

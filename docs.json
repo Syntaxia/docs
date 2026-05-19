@@ -81,6 +81,12 @@
               "guide/functions",
               "guide/source-card-scoping"
             ]
+          },
+          {
+            "group": "Developer integrations",
+            "pages": [
+              "guide/mcp"
+            ]
           }
         ]
       }
