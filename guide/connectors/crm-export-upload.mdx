@@ -1,0 +1,104 @@
+---
+title: "Upload a CRM export"
+description: "Ingest a Salesforce export zip into Syntaxia without connecting a live CRM."
+---
+
+The CRM export upload lets you load Salesforce data into Syntaxia from an export zip instead of a live connection. No connector needed. You upload a Salesforce export zip, and Syntaxia reshapes it into the same pipeline as a live source: staging, entity resolution, the Accounts and Pipeline consoles, and Time Machine all work exactly as they do for a connected org.
+
+Use it when you have the data but not the connection: evaluating Syntaxia before authorizing OAuth, working with an export a customer sent you, or analyzing an org you can no longer sign in to.
+
+<Info>
+An uploaded source is a point-in-time snapshot, not a live sync. The data is as fresh as the export you upload. To bring in newer data, re-upload a newer export.
+</Info>
+
+## Before you start
+
+- You are signed in to Syntaxia under the **Data Ops** function.
+- You have a Salesforce export zip. The standard weekly or monthly export from Salesforce Setup (**Setup > Data Export**) works as is: a zip of CSV files named after their objects, like `Account.csv` and `Opportunity.csv`. Zips that nest the CSVs one folder deep also work.
+- Salesforce is the only supported CRM for uploads today. Support for other CRM exports is planned.
+
+## What gets ingested
+
+Syntaxia reads these files from the export zip:
+
+| File | Notes |
+|---|---|
+| `Account.csv` | Companies and customers |
+| `Contact.csv` | People associated with accounts |
+| `Lead.csv` | Pre-conversion prospects |
+| `Opportunity.csv` | Deals in your pipeline |
+| `OpportunityLineItem.csv` | Products on opportunities |
+| `User.csv` | Salesforce users, used for owner attribution |
+| `OpportunityHistory.csv` | Optional. Powers opportunity [Time Machine](#time-machine-from-an-export) |
+| `AccountHistory.csv` | Optional. Powers account field history, best effort |
+
+Syntaxia skips missing files and ignores files that are not on this list. Neither is an error: Syntaxia ingests whatever it recognizes in the zip.
+
+<Warning>
+Uploads ingest standard fields only. Syntaxia does not read custom fields from an export, although a live Salesforce connector does sync them. If your analysis depends on custom fields, connect the org with the [Salesforce connector](/guide/connectors/salesforce) instead.
+</Warning>
+
+## Upload an export
+
+<Steps>
+  <Step title="Open the upload card">
+    From your Data Ops command center, click **Add Source**. The **Upload a CRM export** card is at the top of the picker.
+  </Step>
+  <Step title="Pick the CRM and name the source">
+    Choose **Salesforce** in the CRM picker, then enter a source name like `Salesforce - Weekly Export`. The name is what you see on the command center, so include the export date or cadence if you plan to upload more than one.
+  </Step>
+  <Step title="Choose the file and start the ingest">
+    Click **Choose File**, select the export zip, and click **Upload and ingest**.
+  </Step>
+  <Step title="Wait for processing">
+    The new source card shows `Processing...` while Syntaxia unzips the export, reshapes it, and runs it through the pipeline. The card reports each phase as it goes, from updating staging tables to resolving accounts. When the ingest finishes, the card turns green and shows the total record count.
+  </Step>
+</Steps>
+
+There is no OAuth step. The source is created without a connector, so you will never see it in `authorizing` and it never needs a reconnect.
+
+## After the ingest
+
+An uploaded source behaves like any other active source:
+
+- **Run ontology discovery** to analyze the data and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
+- **Compose** it with other source ontologies into a unified L3. See [Ontology composition](/guide/ontology-composition).
+- **Explore the consoles.** Unified accounts, reconciliation counters, and pipeline metrics all include the uploaded org.
+
+## Time Machine from an export
+
+If the export contains `OpportunityHistory.csv`, Syntaxia rebuilds the field-level change history for your opportunities. You can scrub an opportunity's stage, amount, and close date over time, the same as with a live source.
+
+Account field history is best effort. It depends on the export containing `AccountHistory.csv`, which Salesforce only produces when field history tracking is enabled on the Account object.
+
+## Refresh the data with a re-upload
+
+Uploaded sources have no resync, because there is no connection to sync from. Instead, the source card shows a **Re-upload** action:
+
+1. Export fresh data from Salesforce.
+2. Click **Re-upload** on the source card and choose the new zip.
+3. Syntaxia ingests it as a new point-in-time snapshot on the same source.
+
+Each re-upload adds a snapshot rather than overwriting the previous one, so Time Machine can travel across your upload history. Any Data Ops user can re-upload, the same as resyncing a live source.
+
+## Limits and permissions
+
+- Uploading and re-uploading require the **Data Ops** function. Only admins and owners can reprocess an uploaded source, the same as for live sources.
+- Uploaded sources are Salesforce sources, so they count toward the 4 Salesforce production slots shown on the **Add Source** screen. Reaching the cap disables new Salesforce OAuth connections, but it never blocks uploads.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The card shows `Ingest failed. Re-upload to retry.`">
+    Syntaxia could not process the file. This can happen when the download is corrupted or the file is not a valid zip archive. Hover over the error label to see the underlying message, then re-export from Salesforce, click **Re-upload** on the card, and choose the new file.
+  </Accordion>
+  <Accordion title="The record count is smaller than expected">
+    The export probably did not include every object. Check your Salesforce export settings and confirm the objects listed under [What gets ingested](#what-gets-ingested) are selected. Also remember that custom fields and custom objects are not ingested from uploads.
+  </Accordion>
+  <Accordion title="Time Machine shows nothing for opportunities">
+    The export did not contain `OpportunityHistory.csv`. Re-export from Salesforce with history objects included, then re-upload.
+  </Accordion>
+  <Accordion title="Account history is missing">
+    Account field history requires `AccountHistory.csv` in the export, which Salesforce only generates when field history tracking is enabled on the Account object. If tracking was off, the history does not exist to ingest.
+  </Accordion>
+</AccordionGroup>

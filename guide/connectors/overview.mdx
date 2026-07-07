@@ -7,6 +7,8 @@ A **connector** is the integration between Syntaxia and one of your source syste
 
 Syntaxia uses a managed data integration layer to run every connector, so the steps to add a source are nearly identical across CRMs. You authorize Syntaxia on the source platform, your data lands in our pipeline, and your source card moves from `pending` to `active` once the first sync completes.
 
+You can also add a source without any connector at all. The **Upload a CRM export** card ingests a Salesforce export zip through the same pipeline as a live connection. See [Upload a CRM export](/guide/connectors/crm-export-upload).
+
 ## Supported sources
 
 Syntaxia supports connectors at three levels of maturity. **Available** connectors are fully wired into the ontology pipeline. **Limited** connectors sync data but do not yet feed into ontology discovery. **Upcoming** connectors are on the roadmap.
@@ -20,6 +22,14 @@ Syntaxia supports connectors at three levels of maturity. **Available** connecto
 | [HubSpot](/guide/connectors/hubspot) | Inbound marketing, sales, and CRM | Unlimited |
 | [Pipedrive](/guide/connectors/pipedrive) | Sales pipeline management | Unlimited |
 | [Power BI](/guide/connectors/power-bi) | Business intelligence and reporting | Unlimited |
+
+### No connector? Upload an export
+
+The **Add Source** screen also offers [Upload a CRM export](/guide/connectors/crm-export-upload). You upload a Salesforce export zip, Syntaxia reshapes it into the same pipeline as a live source, and the result is a normal source card with a point-in-time snapshot of the org. There is no OAuth step and no sync schedule: to refresh the data, you re-upload a newer export. Salesforce is the only supported CRM export today.
+
+### ZoomInfo enrichment overlay
+
+ZoomInfo is not a source you connect. When the ZoomInfo managed package enriches a connected Salesforce org, Syntaxia detects the enrichment automatically and creates a linked **ZoomInfo** source alongside the Salesforce parent. The overlay contributes account fields like industry, location, and intent scores to your unified accounts. The Accounts console marks fields that ZoomInfo contributed with a provenance pill. There is nothing to set up and nothing to authorize.
 
 ### Limited ontology support
 
@@ -47,7 +57,7 @@ Need a connector that is not listed? Email [support@syntaxia.com](mailto:support
 
 ## How the connection flow works
 
-Every connector follows the same five-step pattern. The only thing that changes between source systems is which platform you authorize Syntaxia on.
+Every connector follows the same five-step pattern. The only thing that changes between source systems is which platform you authorize Syntaxia on. The upload path is the exception: it has no authorization step, since there is no platform to authorize against. See [Upload a CRM export](/guide/connectors/crm-export-upload) for that flow.
 
 <Steps>
   <Step title="Open the Add Source screen">
@@ -71,7 +81,7 @@ Every connector follows the same five-step pattern. The only thing that changes 
 
 Adding, reconnecting, or removing a source requires the **Data Ops** function. Within Data Ops:
 
-- **Members** can resync, reconnect, and disconnect sources.
+- **Members** can resync, reconnect, and disconnect sources, and re-upload exports on uploaded sources.
 - **Admins** and **owners** can additionally trigger reprocessing and ontology discovery.
 
 If you do not see the **Add Source** button, you are either not in Data Ops or your role does not permit it. See [Functions](/guide/functions) and [Source card scoping](/guide/source-card-scoping) for the full role matrix.
@@ -79,6 +89,8 @@ If you do not see the **Add Source** button, you are either not in Data Ops or y
 ## Per-source limits
 
 Most connectors are unlimited per organization. Salesforce production is capped at **4 active connections** per org. The **Add Source** screen shows remaining slots next to the Salesforce entry, and the form is disabled when you reach the cap. Disconnecting a source frees a slot only after the source is purged.
+
+Uploaded Salesforce sources count toward the slots shown on the **Add Source** screen, but the cap only disables new OAuth connections. Uploads are never blocked.
 
 ## What happens to your data
 

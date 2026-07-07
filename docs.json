@@ -61,7 +61,8 @@
               "guide/connectors/salesforce-sandbox",
               "guide/connectors/hubspot",
               "guide/connectors/pipedrive",
-              "guide/connectors/power-bi"
+              "guide/connectors/power-bi",
+              "guide/connectors/crm-export-upload"
             ]
           },
           {

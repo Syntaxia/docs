@@ -3,7 +3,7 @@ title: "Connect a source"
 description: "Connect your first CRM source system to Syntaxia."
 ---
 
-A **source** is one of your CRMs, like Salesforce or HubSpot, plugged into Syntaxia. You connect a source through OAuth, name it, and let the first sync run. Once the source card on your command center turns green, you are ready to discover an ontology.
+A **source** is one of your CRMs, like Salesforce or HubSpot, plugged into Syntaxia. Most sources connect through OAuth: you authorize the connection, name it, and let the first sync run. If you have a Salesforce export zip instead of connector access, you can [upload it](/guide/connectors/crm-export-upload) and skip OAuth entirely. Once the source card on your command center turns green, you are ready to discover an ontology.
 
 This guide walks through your first connection. For per-connector details and troubleshooting, see the [connectors overview](/guide/connectors/overview).
 
@@ -26,6 +26,10 @@ From your Data Ops command center, click **Add Source**. The connector picker li
 | [Power BI](/guide/connectors/power-bi) | Microsoft Power BI workspaces. Unlimited. |
 
 Expand the card for the connector you want.
+
+<Tip>
+No connector access? The **Upload a CRM export** card at the top of the picker ingests a Salesforce export zip as a point-in-time snapshot, no OAuth required. See [Upload a CRM export](/guide/connectors/crm-export-upload). The rest of this guide covers the OAuth path.
+</Tip>
 
 ## Name the connection
 

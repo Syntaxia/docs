@@ -4,3 +4,5 @@ description: "How Syntaxia processes data from your CRM sources."
 ---
 
 Syntaxia's data pipeline transforms raw CRM data into structured, queryable information. Data flows from your CRM through Fivetran to S3, where dbt normalizes it into staging tables. DuckDB counts the staged records, and results are written to Postgres for the frontend to display.
+
+[Uploaded CRM exports](/guide/connectors/crm-export-upload) skip the Fivetran step. Syntaxia reshapes the export zip directly into the same raw layout on S3, and everything downstream, from staging to the consoles, is identical to a live source.

@@ -5,6 +5,10 @@ description: "Manage the lifecycle of every CRM source connected to Syntaxia."
 
 A **source system** is a connected CRM in Syntaxia. Each source has a type (Salesforce, HubSpot, Pipedrive, Power BI, or Salesforce Sandbox), a label you choose, and a lifecycle that takes it from first authorization through ongoing operation. This page covers how sources behave once they exist. For step-by-step setup of each source type, see the [connectors overview](/guide/connectors/overview).
 
+Sources come from two origins. Most are **connected** through OAuth and sync on a schedule. A Salesforce source can also be **uploaded** from an export zip, in which case it has no connector and holds a point-in-time snapshot instead of a live feed. See [Upload a CRM export](/guide/connectors/crm-export-upload). Both origins behave the same downstream. The sections below call out the differences.
+
+A linked **ZoomInfo** source can also appear on your command center automatically when the ZoomInfo managed package enriches a connected Salesforce org. You never create it yourself. See the [ZoomInfo enrichment overlay](/guide/connectors/overview#zoominfo-enrichment-overlay).
+
 ## Lifecycle
 
 Every source moves through the same set of states. The current state is reflected on the source card on your command center.
@@ -22,6 +26,8 @@ A source can also be in one of two terminal flags:
 
 - **Disconnected** (`disconnected_at` set): the connector is paused and the source no longer syncs. Data is preserved.
 - **Purging** (`purging_at` set): the connector, the staged data, and the source record are being permanently deleted.
+
+Uploaded sources skip `authorizing` entirely, since there is no OAuth flow. They move from `pending` into a processing phase as soon as the ingest starts, then to `active`. A failed ingest shows `Failed` on the card with an `Ingest failed. Re-upload to retry.` hint. Hover the label to see the full error.
 
 ## Source card states at a glance
 
@@ -41,7 +47,11 @@ The actions available on a source depend on your function and role. See [Source 
 
 ### Resync
 
-Pulls the latest changes from the source platform on demand. Use this when you want fresher data than the next scheduled sync. Available to any Data Ops user.
+Pulls the latest changes from the source platform on demand. Use this when you want fresher data than the next scheduled sync. Available to any Data Ops user. Uploaded sources have no resync; their equivalent is a re-upload.
+
+### Re-upload
+
+Uploaded sources only. Ingests a newer export zip as a new point-in-time snapshot on the same source. Earlier snapshots are preserved, so Time Machine can travel across them. Available to any Data Ops user, the same as resync.
 
 ### Reprocess
 
@@ -53,11 +63,11 @@ Kicks off a fresh [ontology discovery](/guide/ontology-discovery) run for the so
 
 ### Reconnect
 
-Restarts the OAuth flow for the source. Use this when the source is in `error`, when you want to switch to a different integration user on the source platform, or when an OAuth grant has been revoked.
+Restarts the OAuth flow for the source. Use this when the source is in `error`, when you want to switch to a different integration user on the source platform, or when an OAuth grant has been revoked. Uploaded sources have no reconnect, since there is no connection to restore; recover an errored upload with a re-upload instead.
 
 ### Disconnect
 
-Soft-deletes the source. The connector is paused, the source card disappears from the active list, but all staged data is preserved. You can reconnect later if you change your mind.
+Soft-deletes the source. The connector is paused, the source card disappears from the active list, but all staged data is preserved. You can reconnect a connected source later if you change your mind; uploaded sources have no reconnect.
 
 A source that was disconnected before its first sync completed is auto-purged, since there is no data worth preserving.
 
@@ -77,6 +87,8 @@ Hard-deletes a previously disconnected source. Removes the connector on our mana
 
 When you reach a limit, the **Add Source** card for that connector is disabled and shows `No slots`. Disconnect and purge an unused source to free a slot, or contact [support@syntaxia.com](mailto:support@syntaxia.com) to discuss raising the limit.
 
+Uploaded Salesforce sources count toward the Salesforce slots shown on the **Add Source** screen, but the cap only disables new OAuth connections. Uploads themselves are never blocked.
+
 ## What gets stored where
 
 When a source is active, your data lives in two places:
@@ -93,12 +105,12 @@ Disconnecting a source preserves both. Purging deletes both.
     The OAuth flow did not finish. Click **Reconnect** to start a fresh authorization.
   </Accordion>
   <Accordion title="The card moved to `error`">
-    The source platform reported a broken connection. The OAuth grant may have been revoked, the integration user's password changed, or API access removed. Click **Reconnect** and re-authorize.
+    The source platform reported a broken connection. The OAuth grant may have been revoked, the integration user's password changed, or API access removed. Click **Reconnect** and re-authorize. For an uploaded source, there is no connection to restore: click **Re-upload** and ingest a fresh export instead.
   </Accordion>
   <Accordion title="The card has been `syncing` for a long time">
     Initial syncs on large CRMs can take hours. If a card stays in `syncing` for over six hours, contact [support@syntaxia.com](mailto:support@syntaxia.com) so we can investigate.
   </Accordion>
   <Accordion title="I disconnected by mistake">
-    As long as you have not permanently deleted the source, click **Reconnect** on the disconnected source card. Your staged data is intact and the source will resume from where it left off.
+    As long as you have not permanently deleted a connected source, click **Reconnect** on the disconnected source card. Your staged data is intact and the source will resume from where it left off. Uploaded sources have no reconnect; contact [support@syntaxia.com](mailto:support@syntaxia.com) if you disconnected one by mistake.
   </Accordion>
 </AccordionGroup>
