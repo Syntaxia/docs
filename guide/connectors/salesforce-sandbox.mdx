@@ -12,6 +12,7 @@ For production orgs, use the [Salesforce](/guide/connectors/salesforce) connecto
 - You are signed in to Syntaxia under the **Data Ops** function.
 - You know which sandbox you want to connect: developer, partial copy, or full copy.
 - You have a Salesforce sandbox user with **API Enabled** and read access to the objects you want to sync.
+- The sandbox user can authorize the connected app: either the app is installed in the sandbox, or the user has the **Approve Uninstalled Connected Apps** permission. The [connected app access](/guide/connectors/salesforce#connected-app-access) requirement applies to sandboxes the same as to production.
 - The sandbox username includes the sandbox suffix, for example `you@example.com.dev` or `you@example.com.uat`.
 
 <Info>
@@ -65,6 +66,12 @@ When a sandbox is refreshed in Salesforce, the OAuth grant may be invalidated. I
 <AccordionGroup>
   <Accordion title="`Invalid username or password` on the sandbox login page">
     Sandbox usernames include a suffix that matches the sandbox name. If your production username is `you@example.com` and your sandbox is `UAT`, sign in with `you@example.com.uat`.
+  </Accordion>
+  <Accordion title="Salesforce shows `We can't authorize you because of an OAuth error.`">
+    Salesforce blocked the authorization because the connected app is not installed in the sandbox and the authorizing user cannot approve uninstalled connected apps. Resolve it with one of the options under [connected app access](/guide/connectors/salesforce#connected-app-access), then click **Reconnect**.
+  </Accordion>
+  <Accordion title="The `Approve Uninstalled Connected Apps` permission is not available in my sandbox">
+    Sandboxes created before Salesforce's Summer '25 release may be missing the permission. Ask your Salesforce admin to run **Match Production Licenses to Sandbox without a Refresh**, or refresh the sandbox, and the permission becomes available.
   </Accordion>
   <Accordion title="The card moved to `error` after a sandbox refresh">
     Sandbox refreshes can revoke OAuth grants. Click **Reconnect** on the source card to start a fresh authorization.
