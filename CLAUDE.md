@@ -163,13 +163,14 @@ A connected CRM (Salesforce, HubSpot). Connected via OAuth through Fivetran.
 
 ### Data pipeline
 ```
-CRM Sources -> Fivetran -> S3 (Delta Lake) -> dbt (DuckDB) -> S3 (Parquet) -> DuckDB counting -> Postgres -> UI
+CRM Sources -> Fivetran -> S3 (raw) -> processing queue -> standardise (profile + map) -> resolve (golden records + identity) -> Postgres -> UI
 ```
 
-1. **Fivetran** extracts CRM data via OAuth. Writes Delta Lake tables to S3.
-2. **dbt** normalizes raw tables into staging Parquet files using Fivetran's maintained packages.
-3. **DuckDB** counts staged records. Results written to Postgres.
-4. **The frontend** reads from Postgres only.
+1. **Fivetran** extracts CRM data via OAuth and writes raw tables to S3. Uploaded exports land in the same raw layout.
+2. **The processing queue** admits one source at a time per org, inside the org's schedule window (default 21:00 America/New_York).
+3. **Standardise** profiles every column with DuckDB and maps it onto the canonical model (pack, rule, precedent, then model).
+4. **Resolve** builds golden records and groups mentions into resolved companies.
+5. **The frontend** reads from Postgres only.
 
 ### AI providers (BYOK)
 Bring Your Own Key. Organizations configure their own LLM API keys.
@@ -182,31 +183,35 @@ Bring Your Own Key. Organizations configure their own LLM API keys.
 
 One active provider per org at a time. Usage tracked per request (tokens, estimated cost).
 
-### Ontology discovery
-AI-powered multi-agent debate protocol. Analyzes CRM data per source and produces a structured ontology (L2) representing concepts, relationships, and meaning.
+### Golden Layer
+The one model per organization (Company, Account, Location, Industry, Deal; Person, Lead, Seller, Contact; Line, Campaign, Product, Activity). Sources map onto it in the standardise step through four layers: pack (vendored dictionary per source type), rule, precedent, model (one LLM call per unrecognized column). Decisions are applied, provisional, or declined. The Golden Layer console (Data pillar) shows the map, completeness, unmapped columns, and a "Needs you" queue. "Review with the agent" opens a mapping review chat thread scoped to one source; the agent stages map, decline, and memory corrections; an owner/admin with Data approves, rebuilds, and signs off the source.
 
-Uses a Python sidecar (FastAPI + LangGraph) with multiple specialized agents: Explorer, Micro-Critics (8 quality dimensions), Arbiter, Confidence Calibrator. Up to 3 debate rounds.
-
-### Ontology composition
-Cross-source alignment. Takes multiple L2 ontologies and produces a unified L3 ontology via a second debate protocol. Discovers where concepts overlap, resolves conflicts, produces unified go-to-market truth.
+There is no separate ontology discovery or composition step anymore. Do not document a multi-agent debate protocol, L2/L3 ontologies, or a Python sidecar.
 
 ### Anchor
 Ontology registry. Git-like versioning with immutable commits and semantic versioning. Supports YAML DSL, OWL, RDF, Turtle formats. Exposes an MCP server for AI agent integration. Separate product at anchor.syntaxia.com.
 
-### Functions
-Role-based workspaces that scope what users see and do:
-- **Data Ops**: full source management, sync triggers, ontology discovery. The primary workspace for data teams.
-- **Rev Ops**: read-only view of source status and ontology outputs. For revenue operations teams.
+### Pillars
+Top-level workspaces that scope what users see and do. Granted per member, independently of role. Five per organization:
+- **Revenue Control Tower**: cross-pillar landing surface every member gets. Not renameable.
+- **Data**: source management, processing, golden layer, industries, Vantages. Owns workspace configuration.
+- **Planning**: planning views. Command Center only.
+- **Operations**: accounts, contacts, pipeline. New members get Control Tower + Operations by default.
+- **Finance**: grantable but off the pillar switcher. Not renameable.
 
-### Source card scoping
-- **Data Ops**: source cards show action icons (resync, reprocess, ontology discovery, reconnect, disconnect). "Add Source" button visible.
-- **All other functions**: source cards are read-only status indicators. No action icons.
-- **Within Data Ops**: admins/owners can trigger reprocess + ontology discovery. Members can trigger resync, reconnect, disconnect.
+Data, Planning, and Operations are default names. Owners/admins holding the Data pillar can rename them from the chat (`/rename`). Only the label changes. Docs use the default names and link to `/guide/chat/rename-pillars` where a name is referenced.
+
+### Ask SyntaxIA (chat)
+In-product assistant. Answers operational questions about CRM data. Refuses forecasting, CRM writes, cross-org comparisons, coaching. Slash commands: `/support` (report a problem, everyone), `/rename` and `/schedule` (owners/admins with Data pillar). Industry classification policy: read by anyone, changed by any member with the Data pillar, no slash command. Processing schedule default: daily 21:00 America/New_York. Frequencies: continuous, daily, weekdays, weekly.
+
+### Source card actions
+- **Source Management (Data pillar)**: cards carry action icons and "Add Source" is available. Requires the Data pillar.
+- **Everywhere else** (Vantages, Processing, mapping views): cards are read-only status indicators.
+- **Within the Data pillar**: members can add, sync, re-upload, retry ingest, reconnect, disconnect, delete. Admins/owners can additionally reprocess, force rebuild, reclassify industries, remove from queue, cancel, and reprocess all.
 
 ## Related repos
-- **Syntaxia webapp**: `../syntaxia` (Rails 8 monolith)
+- **Syntaxia webapp**: `../syntaxia-prod` (Rails 8 monolith)
 - **Anchor**: `../syntaxia-anchor` (ontology registry, separate Rails app)
-- **Python sidecar**: `../syntaxia/sidecar/` (FastAPI + LangGraph, ontology pipeline agents)
 # Shaping Debate Engine -- Orchestration Rules
 
 Append this section to the CLAUDE.md in any repo where you want the shaping

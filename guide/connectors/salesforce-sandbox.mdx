@@ -3,13 +3,13 @@ title: "Salesforce Sandbox"
 description: "Connect a Salesforce sandbox to Syntaxia for testing and validation."
 ---
 
-The Salesforce Sandbox connector links a non-production Salesforce environment to Syntaxia. Use it to validate ontology changes, dry-run migrations, or train your team without touching production data. Sandbox connections authenticate against `test.salesforce.com` rather than `login.salesforce.com`, so they are kept on a separate connector to avoid accidental crossover.
+The Salesforce Sandbox connector links a non-production Salesforce environment to Syntaxia. Use it to validate mapping changes, dry-run migrations, or train your team without touching production data. Sandbox connections authenticate against `test.salesforce.com` rather than `login.salesforce.com`, so they are kept on a separate connector to avoid accidental crossover.
 
 For production orgs, use the [Salesforce](/guide/connectors/salesforce) connector.
 
 ## Before you start
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - You know which sandbox you want to connect: developer, partial copy, or full copy.
 - You have a Salesforce sandbox user with **API Enabled** and read access to the objects you want to sync.
 - The sandbox user can authorize the connected app: either the app is installed in the sandbox, or the user has the **Approve Uninstalled Connected Apps** permission. The [connected app access](/guide/connectors/salesforce#connected-app-access) requirement applies to sandboxes the same as to production.
@@ -38,7 +38,7 @@ Custom fields are synced. Custom objects are not yet supported.
 
 <Steps>
   <Step title="Add the source">
-    From your Data Ops command center, click **Add Source**, expand the **Salesforce Sandbox** card, and enter a connection label that names the sandbox, for example `Salesforce - UAT` or `Salesforce - DevSandbox`.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Salesforce Sandbox** card, and enter a connection label that names the sandbox, for example `Salesforce - UAT` or `Salesforce - DevSandbox`.
   </Step>
   <Step title="Authorize on the sandbox login page">
     Click **Connect**. Syntaxia redirects you to `test.salesforce.com`. Sign in with your sandbox user, including the sandbox suffix in the username, then click **Allow** on the OAuth consent screen.
@@ -55,7 +55,7 @@ Custom fields are synced. Custom objects are not yet supported.
 
 Treat sandbox connections as throwaway by design. Common patterns:
 
-- **Test ontology changes**: connect a partial copy sandbox, run [ontology discovery](/guide/ontology-discovery), and review the result before promoting to production.
+- **Test mapping changes**: connect a partial copy sandbox, review it in the [Golden Layer](/guide/golden-layer), and confirm the result before promoting to production.
 - **Validate field mappings**: spin up a developer sandbox with synthetic data to confirm Syntaxia interprets your custom fields the way you expect.
 - **Train your team**: give RevOps a sandbox source to explore the Syntaxia UI without exposing live customer data.
 

@@ -3,17 +3,17 @@ title: "Power BI"
 description: "Connect a Microsoft Power BI tenant to Syntaxia."
 ---
 
-The Power BI connector links a Microsoft Power BI tenant to Syntaxia. Use it to bring workspaces, datasets, reports, dashboards, and dataflow metadata into your unified ontology so analytics structure can be reconciled alongside CRM data.
+The Power BI connector links a Microsoft Power BI tenant to Syntaxia. Use it to bring workspaces, datasets, reports, dashboards, and dataflow metadata into Syntaxia so analytics structure can be reconciled alongside CRM data.
 
 <Info>
-Power BI is currently available as a data connector. Full ontology coverage for Power BI artifacts is on the roadmap. You can connect today and your data will be staged in the pipeline. Ontology discovery support will be enabled in a future release.
+Power BI is currently available as a data connector. Mapping Power BI artifacts onto the golden layer is on the roadmap. You can connect today and your data will be staged in the pipeline. Model coverage will be enabled in a future release.
 </Info>
 
 ## Before you start
 
 Connecting Power BI requires a one-time setup in the Microsoft Entra admin center and the Power BI admin portal. You will need access to both.
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - You have **Microsoft Entra ID** admin rights, or someone who does can complete the Azure steps with you.
 - You have **Power BI tenant administrator** access, or someone who does can toggle the required admin settings.
 - Your Power BI tenant uses a **Pro**, **Premium**, or **Fabric** capacity. These tiers expose the admin APIs Syntaxia reads from.
@@ -96,7 +96,7 @@ Power BI grants service principals access through a security group, not directly
   <Step title="Enhance admin API responses with detailed metadata">
     In the same **Admin API settings** section, enable **Enhance admin APIs responses with detailed metadata** and **Enhance admin APIs responses with DAX and mashup expressions**.
 
-    These settings let Syntaxia read dataset schema details that feed ontology discovery.
+    These settings let Syntaxia read dataset schema details that will feed the golden layer.
   </Step>
 </Steps>
 
@@ -108,13 +108,13 @@ Power BI tenant settings can take up to 15 minutes to propagate. If the Syntaxia
 
 The service principal only sees workspaces it has been added to as a member or admin. For organization-wide visibility, add the `Syntaxia Power BI Access` security group to every workspace you want Syntaxia to see, or use a **Workspace access** policy at the tenant level.
 
-At minimum, add the security group as a **Member** of the workspaces you plan to include in ontology discovery.
+At minimum, add the security group as a **Member** of the workspaces you plan to include in Syntaxia.
 
 ## Connect Power BI in Syntaxia
 
 <Steps>
   <Step title="Add the source">
-    From your Data Ops command center, click **Add Source**, expand the **Power BI** card, and enter a connection label like `Power BI - Finance` or `Power BI - GTM`.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Power BI** card, and enter a connection label like `Power BI - Finance` or `Power BI - GTM`.
   </Step>
   <Step title="Enter your credentials">
     Paste the three values you collected in Stage 1:

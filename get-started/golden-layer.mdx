@@ -1,0 +1,45 @@
+---
+title: "Review your Golden Layer"
+description: "See how your first source mapped onto Syntaxia's model, and settle what needs a decision."
+---
+
+Once your first source is green, Syntaxia has already profiled its columns and mapped them onto the canonical model. The Golden Layer console is where you check that work and settle the columns it could not decide on its own.
+
+## Before you start
+
+- A source is connected and its first processing run has finished. The card reads **Mapping source fields** and then **Building golden records** while that happens.
+- You hold the **Data** pillar. See [Pillars](/guide/pillars).
+- Your organization has an active [AI provider](/guide/ai-providers). Columns no dictionary recognizes are sent to it once.
+
+## Open the console
+
+<Steps>
+  <Step title="Go to Golden Layer">
+    From the Data pillar, open **Golden Layer**. Sources are on the left, the model on the right, and the mapping runs between them as curves.
+  </Step>
+  <Step title="Check completeness">
+    The **Complete** figure is the share of the model that at least one source feeds. Click a node in the map, such as **Account** or **Deal**, to see which attributes are filled and which are still dashed.
+  </Step>
+  <Step title="Open Needs you">
+    The **Needs you** list holds the decisions only a person can make: proposed mappings that need confirming, collisions between two columns, and columns carrying data that reach nothing.
+  </Step>
+  <Step title="Review with the agent">
+    Click **Review with the agent** on the source. A chat thread opens with the source's findings. Tell it what each column should feed, or decline the ones that should not map. It stages your decisions without writing anything.
+  </Step>
+  <Step title="Approve and rebuild">
+    An owner or admin approves the staged set from the console and clicks **Rebuild now**. The source is reprocessed with your corrections, and the golden record updates.
+  </Step>
+</Steps>
+
+## What you get
+
+Every console downstream reads the golden record you just reviewed: Accounts, Pipeline, the command centers, Vantages, and the chat. When you connect a second source, it maps onto the same model, and identity resolution groups the two sources' mentions of one customer into one resolved company.
+
+<Columns cols={2}>
+  <Card title="Golden Layer guide" icon="layer-group" href="/guide/golden-layer">
+    The model, the mapping layers, and the review flow in full.
+  </Card>
+  <Card title="Ask SyntaxIA" icon="comments" href="/guide/chat/overview">
+    Ask questions about your reconciled data and change workspace settings.
+  </Card>
+</Columns>

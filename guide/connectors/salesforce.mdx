@@ -9,7 +9,7 @@ The Salesforce connector links a production Salesforce org to Syntaxia. Use it f
 
 Confirm the following before opening the **Add Source** screen.
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - Your organization has fewer than **4 active Salesforce connections**. Salesforce production is capped per org.
 - You have, or can borrow, a Salesforce user with the **API Enabled** profile permission. The user does not need to be a System Administrator, but they must have read access to the objects you want Syntaxia to see.
 - The user can authorize the connected app: either the app is already installed in your org, or the user has the **Approve Uninstalled Connected Apps** permission. See [Connected app access](#connected-app-access).
@@ -38,7 +38,7 @@ Custom fields on these objects are also synced. Custom objects are not yet suppo
 
 <Steps>
   <Step title="Add the source">
-    From your Data Ops command center, click **Add Source**, expand the **Salesforce** card, and enter a connection label. We recommend something like `Salesforce - Production` or `Salesforce - HQ` so it is easy to identify on the command center.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Salesforce** card, and enter a connection label. We recommend something like `Salesforce - Production` or `Salesforce - HQ` so it is easy to identify on the command center.
   </Step>
   <Step title="Authorize Syntaxia">
     Click **Connect**. You will be redirected to the Salesforce login page. Sign in with your integration user, then click **Allow** on the OAuth consent screen.
@@ -78,8 +78,7 @@ Choose one of these options before you connect:
 Once your Salesforce source is `active`, you can:
 
 - **Resync** at any time from the source card to pull the latest changes.
-- **Run ontology discovery** to analyze your Salesforce data and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
-- **Compose** the Salesforce ontology with other source ontologies into a unified L3. See [Ontology composition](/guide/ontology-composition).
+- **Review the Golden Layer** to see how the source mapped onto the model and settle what needs a decision. See [Golden Layer](/guide/golden-layer).
 
 ## Troubleshooting
 

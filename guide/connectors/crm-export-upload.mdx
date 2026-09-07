@@ -13,7 +13,7 @@ An uploaded source is a point-in-time snapshot, not a live sync. The data is as 
 
 ## Before you start
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - You have a Salesforce export zip. The standard weekly or monthly export from Salesforce Setup (**Setup > Data Export**) works as is: a zip of CSV files named after their objects, like `Account.csv` and `Opportunity.csv`. Zips that nest the CSVs one folder deep also work.
 - Salesforce is the only supported CRM for uploads today. Support for other CRM exports is planned.
 
@@ -42,7 +42,7 @@ Uploads ingest standard fields only. Syntaxia does not read custom fields from a
 
 <Steps>
   <Step title="Open the upload card">
-    From your Data Ops command center, click **Add Source**. The **Upload a CRM export** card is at the top of the picker.
+    From Source Management in the Data pillar, click **Add Source**. The **Upload a CRM export** card is at the top of the picker.
   </Step>
   <Step title="Pick the CRM and name the source">
     Choose **Salesforce** in the CRM picker, then enter a source name like `Salesforce - Weekly Export`. The name is what you see on the command center, so include the export date or cadence if you plan to upload more than one.
@@ -61,8 +61,7 @@ There is no OAuth step. The source is created without a connector, so you will n
 
 An uploaded source behaves like any other active source:
 
-- **Run ontology discovery** to analyze the data and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
-- **Compose** it with other source ontologies into a unified L3. See [Ontology composition](/guide/ontology-composition).
+- **Review the Golden Layer** to see how the source mapped onto the model and settle what needs a decision. See [Golden Layer](/guide/golden-layer).
 - **Explore the consoles.** Unified accounts, reconciliation counters, and pipeline metrics all include the uploaded org.
 
 ## Time Machine from an export
@@ -79,11 +78,11 @@ Uploaded sources have no resync, because there is no connection to sync from. In
 2. Click **Re-upload** on the source card and choose the new zip.
 3. Syntaxia ingests it as a new point-in-time snapshot on the same source.
 
-Each re-upload adds a snapshot rather than overwriting the previous one, so Time Machine can travel across your upload history. Any Data Ops user can re-upload, the same as resyncing a live source.
+Each re-upload adds a snapshot rather than overwriting the previous one, so Time Machine can travel across your upload history. Any member who holds the Data pillar can re-upload, the same as resyncing a live source.
 
 ## Limits and permissions
 
-- Uploading and re-uploading require the **Data Ops** function. Only admins and owners can reprocess an uploaded source, the same as for live sources.
+- Uploading and re-uploading require the **Data** pillar. Only admins and owners can reprocess an uploaded source, the same as for live sources.
 - Uploaded sources are Salesforce sources, so they count toward the 4 Salesforce production slots shown on the **Add Source** screen. Reaching the cap disables new Salesforce OAuth connections, but it never blocks uploads.
 
 ## Troubleshooting

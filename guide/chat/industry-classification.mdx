@@ -1,0 +1,82 @@
+---
+title: "Industry classification"
+description: "Choose which industry taxonomy drives industries across Syntaxia, and see how companies map onto it."
+---
+
+A company in your golden layer can carry industry classifications from several vocabularies at once: its CRM's own Industry picklist, a ZoomInfo picklist, and the official NAICS and SIC codes that Syntaxia maintains. The **industry classification policy** decides which one of those drives industries everywhere in the product. Anyone can read the policy from the chat. A member who holds the Data pillar can change it.
+
+This matters to RevOps because every industry chart, segment, command center tile, and Vantage reads the same preferred classification. Switching the policy changes what "industry" means across the whole organization.
+
+## Taxonomies
+
+| Taxonomy | Kind | Where it comes from |
+|---|---|---|
+| NAICS | Official, closed | Syntaxia's maintained catalogue. Requires Syntaxia enrichment. |
+| SIC | Official, closed | Syntaxia's maintained catalogue. Requires Syntaxia enrichment. |
+| ZoomInfo industry | Open picklist | The [ZoomInfo enrichment overlay](/guide/connectors/overview#zoominfo-enrichment-overlay), when present. |
+| Source industry | Open picklist | Each connected CRM's own Industry field. |
+
+<Info>
+NAICS and SIC are part of **Syntaxia industries**, a premium add-on for enterprise accounts. Syntaxia maintains the official catalogues by edition and standardizes your companies onto them. An admin turns it on by adding **Syntaxia enrichment** as a source, from the Industries console or from **Add Source**. Without it, your organization still gets industries from its CRM and ZoomInfo vocabularies. The official trees are simply not available to choose.
+</Info>
+
+## Automatic mode
+
+A new organization starts in automatic mode. For each company, Syntaxia uses the first classification it finds in this order: NAICS, then SIC, then ZoomInfo, then the source's own industry. Automatic mode stays in place until someone with Data pillar access explicitly selects a taxonomy.
+
+## Read the policy
+
+Ask the assistant. Any member can.
+
+- "Which industry classification are we using?"
+- "What industry taxonomies are available to us?"
+- "What is the classification refresh and enrichment status?"
+
+The answer names the mode (automatic or selected), the selected taxonomy and its edition, every taxonomy available to your organization, who last changed the policy and when, and two statuses: whether dependent views have finished refreshing, and whether AI enrichment for missing classifications has run.
+
+## Change the policy
+
+Ask the assistant to select a taxonomy or return to automatic mode.
+
+- "Use SIC as our primary industry classification."
+- "Switch industries to NAICS."
+- "Use our Salesforce industry field as the primary classification."
+- "Reset the industry classification to automatic."
+
+The assistant reads the available choices first, then applies the one you named. It only changes the policy when you ask for it in your own message. If the taxonomy you name is not available to your organization, for example NAICS without Syntaxia enrichment, the change is refused and the assistant tells you why.
+
+Changing the policy requires the Data pillar but not an admin role. A member who holds Data can change it. See [who can do what](/guide/chat/overview#who-can-do-what).
+
+### What happens after a change
+
+- **The preference saves immediately** and is recorded with your name and the time. Preference history is kept, so historical charts reflect the policy that was in force at the time.
+- **Dependent views refresh asynchronously.** Company pages, industry charts, command centers, and Vantages are rebuilt in the background. An existing Vantage report may show the previous policy until its refresh completes. The assistant reports the refresh status as queued or applied rather than claiming it is done.
+- **Nothing is lost.** Every classification a company already holds stays on its record as evidence. Selecting SIC does not remove NAICS facts.
+- **Missing classifications trigger AI enrichment.** When a company has no classification in the selected taxonomy, Syntaxia asks your organization's [AI provider](/guide/ai-providers) to classify it from the company's name, domain, description, and existing classifications. It only accepts real catalogue codes at high model-reported confidence, may choose a broader category, and leaves the company unclassified when the evidence is thin. AI results show their reasoning, provider, model, and confidence on the company page. Enrichment needs a working AI provider.
+- **Unchanged inputs reuse previous work.** Ordinary reprocessing reuses accepted AI results and previous decisions to abstain. Only changed evidence prompts another attempt. **Force rebuild** on a source requests a fresh attempt.
+
+For example, if you select SIC and a company only has a NAICS code, its NAICS facts remain. Syntaxia attempts to obtain a SIC classification. Until that succeeds, the company has no preferred SIC industry.
+
+## See the mapping between industries and companies
+
+The policy is one setting. Two places in the Data pillar show how it plays out on your companies.
+
+### The Industries console
+
+Open **Data** > **Industries**. This console shows the official taxonomies Syntaxia maintains, by version. It is readable in every organization, but the company counts only fill once Syntaxia enrichment is connected. Without it, the console shows a notice with an **Add Syntaxia enrichment** button for admins.
+
+For the selected taxonomy and edition you see:
+
+- **Coverage.** How many of your companies are classified in this taxonomy, as a count and a percentage.
+- **Top 5.** The five industry nodes with the most companies, with their share of classified companies.
+- **The tree.** Every node in the taxonomy, with its code, title, and the number of companies that sit on it. Search by code or title, and sort by name, company count, or share.
+
+### Company pages
+
+Each company's identity card shows its preferred industry, labeled **Used across Syntaxia**. Expand **All industry classifications** to see every classification the company holds, with its taxonomy, code, edition, and designation. The one the current policy selects is marked **Used across Syntaxia**. AI-inferred classifications show their reasoning and confidence.
+
+## Related
+
+- [Source systems](/guide/source-systems) covers adding and removing sources, including Syntaxia enrichment.
+- [AI providers](/guide/ai-providers) power enrichment for companies missing a classification.
+- [Ask SyntaxIA](/guide/chat/overview) explains chat access rules.

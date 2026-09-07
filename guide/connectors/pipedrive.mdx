@@ -3,11 +3,11 @@ title: "Pipedrive"
 description: "Connect a Pipedrive account to Syntaxia."
 ---
 
-The Pipedrive connector links a Pipedrive company account to Syntaxia. Use it to bring sales pipeline data, including organizations, persons, deals, activities, and users, into your unified ontology.
+The Pipedrive connector links a Pipedrive company account to Syntaxia. Use it to bring sales pipeline data, including organizations, persons, deals, activities, and users, into your golden layer.
 
 ## Before you start
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - You are an **Admin user** on the Pipedrive company you want to connect, or you have permission to authorize OAuth integrations.
 - Your Pipedrive plan supports API access. All paid plans do.
 
@@ -31,7 +31,7 @@ Custom fields on Organizations, Persons, and Deals are synced.
 
 <Steps>
   <Step title="Add the source">
-    From your Data Ops command center, click **Add Source**, expand the **Pipedrive** card, and enter a connection label like `Pipedrive - SDR Team`.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Pipedrive** card, and enter a connection label like `Pipedrive - SDR Team`.
   </Step>
   <Step title="Authorize Syntaxia">
     Click **Connect**. You will be redirected to Pipedrive. If you are signed in to multiple Pipedrive companies, select the one you want to connect, then click **Allow and install**.
@@ -58,8 +58,7 @@ If your authorizing user has restricted visibility on certain pipelines or deals
 Once your Pipedrive source is `active`, you can:
 
 - **Resync** at any time to pull the latest changes.
-- **Run ontology discovery** to model your Pipedrive structure. See [Ontology discovery](/guide/ontology-discovery).
-- **Compose** with other source ontologies. See [Ontology composition](/guide/ontology-composition).
+- **Review the Golden Layer** to see how the source mapped onto the model and settle what needs a decision. See [Golden Layer](/guide/golden-layer).
 
 ## Troubleshooting
 

@@ -1,0 +1,70 @@
+---
+title: "Processing schedule"
+description: "Check and change when Syntaxia processes newly synced source data."
+---
+
+Syntaxia processes your source data in a queue. When a source finishes a sync, or someone presses **Reprocess** on a source card, that work joins the queue and waits for the organization's processing window. The schedule decides when that window opens.
+
+By default, every organization runs once a day at 9:00 PM Eastern Time (`America/New_York`). At that hour Syntaxia works through everything that arrived since the previous run, one source at a time, in the order the requests arrived.
+
+## Check the schedule
+
+Anyone in the organization can ask the assistant:
+
+- "When does processing run?"
+- "What is the processing schedule and how much is waiting?"
+- "When is the next run?"
+
+The answer includes the cadence as a sentence, such as "Runs every day at 9:00 PM EDT", the next run time, how long until it, whether the organization is on the product default, and how many sources are queued and waiting.
+
+The same information is on the **Processing** console in the Data pillar, which leads with a live countdown to the next run. Owners and admins with the Data pillar also see a **Process now** button there to start the queue ahead of the window.
+
+## Change the schedule
+
+Only owners and admins who hold the Data pillar can change the schedule. See [who can do what](/guide/chat/overview#who-can-do-what).
+
+### From the form
+
+<Steps>
+  <Step title="Open the form">
+    In the chat composer, type `/schedule` and press Enter. The card shows the current settings and, if the organization has never changed them, a note that it uses the product default.
+  </Step>
+  <Step title="Pick a frequency">
+    Choose **Continuous**, **Daily**, **Weekdays**, or **Weekly**. Continuous hides the time fields because it runs work as soon as it arrives.
+  </Step>
+  <Step title="Set the time">
+    Pick an hour, a minute, and a time zone. For Weekly, also select at least one day. The card previews the next run as you edit.
+  </Step>
+  <Step title="Save">
+    Click **Save**. A receipt with the new cadence appears in the conversation, and the Processing console updates immediately.
+  </Step>
+</Steps>
+
+If the organization has a custom schedule, the card also offers **Reset to workspace default**.
+
+### By asking
+
+- "Run processing at 6am on weekdays."
+- "Process continuously."
+- "Move the processing window to 22:30 Europe/London."
+- "Reset the processing schedule."
+
+When you name an hour without a time zone, the organization keeps the zone it already had. An organization that was running continuously starts from the product default zone.
+
+## Frequencies
+
+| Frequency | When the queue runs |
+|---|---|
+| Continuous | As soon as work arrives. No hour, minute, or time zone applies. |
+| Daily | Every day at the time you set. This is the default, at 9:00 PM `America/New_York`. |
+| Weekdays | Monday to Friday at the time you set. |
+| Weekly | On the days you name, at the time you set. At least one day is required. |
+
+Hours run from 0 to 23 and minutes from 0 to 59. Time zones use IANA names, such as `America/New_York` or `Europe/London`. Daylight saving changes are handled automatically. A wall time that does not exist on a spring-forward night moves forward one hour, and a wall time that occurs twice on a fall-back night takes the first.
+
+## What a change affects
+
+- **Work already waiting moves to the new window.** Sources that are queued but have not started are re-dated onto the new schedule. The assistant tells you how many will move. Work that someone has already expedited with **Process now** stays where it is.
+- **Nothing starts.** Changing the schedule says when the queue may run. It does not begin a run. Use **Process now** on the Processing console to run ahead of the window.
+- **Reset is not continuous.** Reset drops the organization's custom schedule and returns it to the product default, which is nightly. Continuous is its own setting that stores "never wait".
+- **Source syncs are unaffected.** Connected CRMs keep syncing on their own connector schedule. The processing window only governs when Syntaxia processes what those syncs delivered.

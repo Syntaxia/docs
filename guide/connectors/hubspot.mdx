@@ -3,11 +3,11 @@ title: "HubSpot"
 description: "Connect a HubSpot portal to Syntaxia."
 ---
 
-The HubSpot connector links a HubSpot portal to Syntaxia. Use it to bring CRM, marketing, and deal data into your unified ontology. The connector authenticates with HubSpot via OAuth, so you do not need to create or manage an API key yourself.
+The HubSpot connector links a HubSpot portal to Syntaxia. Use it to bring CRM, marketing, and deal data into your golden layer. The connector authenticates with HubSpot via OAuth, so you do not need to create or manage an API key yourself.
 
 ## Before you start
 
-- You are signed in to Syntaxia under the **Data Ops** function.
+- You are signed in to Syntaxia and hold the **Data** pillar.
 - You have **Super Admin** access to the HubSpot portal you want to connect, or a user with permission to install OAuth apps.
 - The portal is on a HubSpot tier that exposes the objects you care about. Free portals expose Companies, Contacts, and Deals. Marketing Hub and Sales Hub Pro or higher expose additional fields and pipelines.
 
@@ -32,7 +32,7 @@ Custom properties on Companies, Contacts, and Deals are synced. Custom objects a
 
 <Steps>
   <Step title="Add the source">
-    From your Data Ops command center, click **Add Source**, expand the **HubSpot** card, and enter a connection label like `HubSpot - Marketing` or `HubSpot - Acme`.
+    From Source Management in the Data pillar, click **Add Source**, expand the **HubSpot** card, and enter a connection label like `HubSpot - Marketing` or `HubSpot - Acme`.
   </Step>
   <Step title="Authorize Syntaxia">
     Click **Connect**. You will be redirected to HubSpot. If you belong to multiple portals, HubSpot asks which one to install the integration on. Select the correct portal, review the requested scopes, then click **Connect app**.
@@ -57,15 +57,14 @@ The OAuth consent screen lists every scope Syntaxia requests. The minimum set co
 - `crm.schemas.contacts.read`
 - `crm.schemas.deals.read`
 
-If your portal admin restricts OAuth installs, ask them to approve the Syntaxia app once. After that, any Data Ops user can reconnect without further admin intervention.
+If your portal admin restricts OAuth installs, ask them to approve the Syntaxia app once. After that, any member who holds the Data pillar can reconnect without further admin intervention.
 
 ## After the first sync
 
 Once your HubSpot source is `active`, you can:
 
 - **Resync** at any time to pull the latest changes.
-- **Run ontology discovery** to analyze the portal and produce an L2 ontology. See [Ontology discovery](/guide/ontology-discovery).
-- **Compose** the HubSpot ontology with other source ontologies. See [Ontology composition](/guide/ontology-composition).
+- **Review the Golden Layer** to see how the source mapped onto the model and settle what needs a decision. See [Golden Layer](/guide/golden-layer).
 
 ## Troubleshooting
 

@@ -1,0 +1,38 @@
+---
+title: "Source card actions"
+description: "Which actions appear on a source card, depending on your pillar and role."
+---
+
+Source cards show the state of every connected source. Whether they also let you act on a source depends on where you are looking from and on your role.
+
+<Info>
+This page uses the default pillar names. If your organization has [renamed a pillar](/guide/chat/rename-pillars), read "Data" as whatever your organization calls it. The rules do not change with the label.
+</Info>
+
+## Where cards are interactive
+
+- **Source Management in the Data pillar.** Cards carry action icons, the detail panel carries an action chip, and the **Add Source** button is available. You need to hold the Data pillar to open this console.
+- **Everywhere else.** Cards on Vantages, the Processing console, and pipeline mapping views are read-only status indicators. They show the same state and hint text, without action icons.
+
+## Actions by role
+
+Within the Data pillar, the role you hold in the organization decides which actions you can trigger.
+
+| Action | Members | Admins and owners |
+|---|---|---|
+| Add a source | Yes | Yes |
+| Trigger sync (connected sources) | Yes | Yes |
+| Re-upload (uploaded sources) | Yes | Yes |
+| Retry ingest (uploaded sources after a failed ingest) | Yes | Yes |
+| Reconnect, complete setup, or resume autosync | Yes | Yes |
+| Disconnect and delete | Yes | Yes |
+| Reprocess data or force rebuild | No | Yes |
+| Reclassify industries (Syntaxia enrichment source) | No | Yes |
+| Remove from queue or cancel a run | No | Yes |
+| Reprocess all | No | Yes |
+
+An admin or owner who does not hold the Data pillar cannot open Source Management, so they see none of these actions until the pillar is granted. See [Pillars](/guide/pillars#grant-pillars-to-members).
+
+## Uploaded sources
+
+On [uploaded sources](/guide/connectors/crm-export-upload), a single **Re-upload** action replaces the sync and reconnect icons, and any Data pillar member can trigger it. Reprocess scoping is unchanged.

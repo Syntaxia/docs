@@ -37,8 +37,7 @@
               "get-started/sign-in",
               "get-started/organizations",
               "get-started/connect-source",
-              "get-started/discover-ontology",
-              "get-started/compose"
+              "get-started/golden-layer"
             ]
           }
         ]
@@ -66,11 +65,10 @@
             ]
           },
           {
-            "group": "AI and Ontology",
+            "group": "AI and Golden Layer",
             "pages": [
+              "guide/golden-layer",
               "guide/ai-providers",
-              "guide/ontology-discovery",
-              "guide/ontology-composition",
               "guide/anchor"
             ]
           },
@@ -79,8 +77,18 @@
             "pages": [
               "guide/authentication",
               "guide/organizations",
-              "guide/functions",
-              "guide/source-card-scoping"
+              "guide/pillars",
+              "guide/source-card-actions"
+            ]
+          },
+          {
+            "group": "Ask SyntaxIA",
+            "pages": [
+              "guide/chat/overview",
+              "guide/chat/report-a-problem",
+              "guide/chat/rename-pillars",
+              "guide/chat/processing-schedule",
+              "guide/chat/industry-classification"
             ]
           },
           {
@@ -139,5 +147,31 @@
       "apiKey": "phc_peX9VdjYBaQDGP4onAsVjkMRvitmPZsq8STchGxp5HLi",
       "apiHost": "https://ctx.syntaxia.com"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/guide/functions",
+      "destination": "/guide/pillars"
+    },
+    {
+      "source": "/guide/source-card-scoping",
+      "destination": "/guide/source-card-actions"
+    },
+    {
+      "source": "/get-started/discover-ontology",
+      "destination": "/get-started/golden-layer"
+    },
+    {
+      "source": "/get-started/compose",
+      "destination": "/get-started/golden-layer"
+    },
+    {
+      "source": "/guide/ontology-discovery",
+      "destination": "/guide/golden-layer"
+    },
+    {
+      "source": "/guide/ontology-composition",
+      "destination": "/guide/golden-layer"
+    }
+  ]
 }

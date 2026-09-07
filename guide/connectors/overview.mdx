@@ -3,7 +3,7 @@ title: "Connectors overview"
 description: "Browse the source systems Syntaxia connects to and how the connection flow works."
 ---
 
-A **connector** is the integration between Syntaxia and one of your source systems. You add connectors from the **Add Source** screen in Data Ops, and each one becomes a source card on your command center once it is active.
+A **connector** is the integration between Syntaxia and one of your source systems. You add connectors from the **Add Source** screen in the Data pillar, and each one becomes a source card on your command center once it is active.
 
 Syntaxia uses a managed data integration layer to run every connector, so the steps to add a source are nearly identical across CRMs. You authorize Syntaxia on the source platform, your data lands in our pipeline, and your source card moves from `pending` to `active` once the first sync completes.
 
@@ -11,7 +11,7 @@ You can also add a source without any connector at all. The **Upload a CRM expor
 
 ## Supported sources
 
-Syntaxia supports connectors at three levels of maturity. **Available** connectors are fully wired into the ontology pipeline. **Limited** connectors sync data but do not yet feed into ontology discovery. **Upcoming** connectors are on the roadmap.
+Syntaxia supports connectors at three levels of maturity. **Available** connectors are fully wired into the golden layer. **Limited** connectors sync data but do not yet map onto the model. **Upcoming** connectors are on the roadmap.
 
 ### Available
 
@@ -31,9 +31,9 @@ The **Add Source** screen also offers [Upload a CRM export](/guide/connectors/cr
 
 ZoomInfo is not a source you connect. When the ZoomInfo managed package enriches a connected Salesforce org, Syntaxia detects the enrichment automatically and creates a linked **ZoomInfo** source alongside the Salesforce parent. The overlay contributes account fields like industry, location, and intent scores to your unified accounts. The Accounts console marks fields that ZoomInfo contributed with a provenance pill. There is nothing to set up and nothing to authorize.
 
-### Limited ontology support
+### Limited model support
 
-Data syncs are available, but the ontology pipeline does not yet model these systems. You can connect them today and expect ontology coverage in a future release.
+Data syncs are available, but Syntaxia does not yet map these systems onto the golden layer. You can connect them today and expect mapping coverage in a future release.
 
 - Apollo
 - Clari
@@ -61,7 +61,7 @@ Every connector follows the same five-step pattern. The only thing that changes 
 
 <Steps>
   <Step title="Open the Add Source screen">
-    From your Data Ops command center, click **Add Source**. You must be in the Data Ops function. Members, admins, and owners can all add sources.
+    From Source Management in the Data pillar, click **Add Source**. You must hold the Data pillar. Members, admins, and owners can all add sources.
   </Step>
   <Step title="Pick the connector">
     Choose Salesforce, Salesforce Sandbox, HubSpot, Pipedrive, or Power BI from the **Available** list.
@@ -79,12 +79,12 @@ Every connector follows the same five-step pattern. The only thing that changes 
 
 ## Required role
 
-Adding, reconnecting, or removing a source requires the **Data Ops** function. Within Data Ops:
+Adding, reconnecting, or removing a source requires the **Data** pillar. Within the Data pillar:
 
 - **Members** can resync, reconnect, and disconnect sources, and re-upload exports on uploaded sources.
-- **Admins** and **owners** can additionally trigger reprocessing and ontology discovery.
+- **Admins** and **owners** can additionally trigger reprocessing, approve mapping corrections, and sign off a source.
 
-If you do not see the **Add Source** button, you are either not in Data Ops or your role does not permit it. See [Functions](/guide/functions) and [Source card scoping](/guide/source-card-scoping) for the full role matrix.
+If you do not see the **Add Source** button, you are either not in the Data pillar or your role does not permit it. See [Pillars](/guide/pillars) and [Source card actions](/guide/source-card-actions) for the full role matrix.
 
 ## Per-source limits
 

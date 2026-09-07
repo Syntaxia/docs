@@ -3,19 +3,19 @@ title: "Connect a source"
 description: "Connect your first CRM source system to Syntaxia."
 ---
 
-A **source** is one of your CRMs, like Salesforce or HubSpot, plugged into Syntaxia. Most sources connect through OAuth: you authorize the connection, name it, and let the first sync run. If you have a Salesforce export zip instead of connector access, you can [upload it](/guide/connectors/crm-export-upload) and skip OAuth entirely. Once the source card on your command center turns green, you are ready to discover an ontology.
+A **source** is one of your CRMs, like Salesforce or HubSpot, plugged into Syntaxia. Most sources connect through OAuth: you authorize the connection, name it, and let the first sync run. If you have a Salesforce export zip instead of connector access, you can [upload it](/guide/connectors/crm-export-upload) and skip OAuth entirely. Once the source card turns green, Syntaxia has mapped the source onto its model and you can review the result in the Golden Layer.
 
 This guide walks through your first connection. For per-connector details and troubleshooting, see the [connectors overview](/guide/connectors/overview).
 
 ## Before you start
 
 - You are signed in to Syntaxia.
-- You belong to the **Data Ops** function. Adding sources is a Data Ops action. See [Functions](/guide/functions) if you need to add yourself.
+- You hold the **Data** pillar. Adding sources is a Data pillar action. See [Pillars](/guide/pillars) if you need to add yourself.
 - You can sign in to the source platform you plan to connect, with permission to authorize a third-party integration. The exact role varies by platform; the per-connector pages list specifics.
 
 ## Pick a connector
 
-From your Data Ops command center, click **Add Source**. The connector picker lists every supported source.
+From Source Management in the Data pillar, click **Add Source**. The connector picker lists every supported source.
 
 | Connector | When to use it |
 |---|---|
@@ -77,8 +77,8 @@ If the card moves to `error` or stays in `authorizing`, see the troubleshooting 
 ## Next steps
 
 <Columns cols={2}>
-  <Card title="Discover your ontology" icon="brain" href="/get-started/discover-ontology">
-    Run AI-powered analysis on your newly connected source.
+  <Card title="Review your Golden Layer" icon="layer-group" href="/get-started/golden-layer">
+    See how your new source mapped onto the model and settle what needs a decision.
   </Card>
   <Card title="Connector reference" icon="plug" href="/guide/connectors/overview">
     Browse per-connector setup guides and troubleshooting.

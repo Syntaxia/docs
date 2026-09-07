@@ -1,0 +1,55 @@
+---
+title: "Rename a pillar"
+description: "Give the Data, Planning, and Operations pillars the names your team uses, from the chat."
+---
+
+Pillars are the top-level workspaces in Syntaxia. Every organization has the same five: the Revenue Control Tower, Data, Planning, Operations, and Finance. An owner or admin who holds the Data pillar can rename Data, Planning, and Operations so the app header matches the vocabulary your team already uses.
+
+## What changes and what does not
+
+Only the display label changes. The pillar keeps its URL, its consoles, its member grants, and every link anyone has bookmarked. Renaming Planning to "Forecasting" changes the word in the header and nowhere else.
+
+The Revenue Control Tower and Finance cannot be renamed. The Revenue Control Tower is the landing surface every member shares rather than a pillar of its own, and Finance is not yet on the pillar switcher.
+
+A rename takes effect immediately for everyone in the organization. There is no approval step.
+
+## Rename from the form
+
+<Steps>
+  <Step title="Open the form">
+    In the chat composer, type `/rename` and press Enter. A card opens with one field per renameable pillar, pre-filled with the current label.
+  </Step>
+  <Step title="Edit the labels">
+    Change one or more labels. Each field shows a character count and accepts 2 to 40 characters. **Save** stays disabled until you change something.
+  </Step>
+  <Step title="Save">
+    Click **Save**. A receipt appears in the conversation listing each change, for example "Renamed the Planning pillar to "Forecasting"", and the header updates at once.
+  </Step>
+</Steps>
+
+<Frame>
+  <img src="/images/chat/rename-pillar-form.png" alt="The rename a pillar form with fields for Data, Planning, and Operations" />
+</Frame>
+
+A pillar that already carries a custom label shows a **Reset to default** link on its row. Click it and save to restore the product name.
+
+## Rename by asking
+
+You can ask for the same change in plain language. The assistant applies the same rules as the form and reports the result.
+
+- "Rename the Operations pillar to GTM."
+- "Call Data 'Data Foundation'."
+- "Reset Planning to its default name."
+
+The assistant only renames a pillar when you ask for it in your own message. It never renames one on its own reading of the conversation.
+
+## Rules
+
+- A label is 2 to 40 characters. Leading and trailing spaces are trimmed.
+- No two pillars in one organization can share a label, ignoring case. Renaming Planning to "Finance" is refused because Finance already uses that name.
+- Setting a label back to the product default is treated as a reset, so the custom label is dropped rather than stored.
+- Resetting a pillar that already uses its default name is reported as no change.
+
+## Who can rename
+
+Owners and admins who hold the Data pillar. Members, and admins who do not hold Data, can ask, and the assistant tells them who can make the change. See [who can do what](/guide/chat/overview#who-can-do-what).

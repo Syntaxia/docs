@@ -1,6 +1,17 @@
 ---
 title: "AI providers"
-description: "Configure your own AI provider keys for ontology discovery."
+description: "Configure your own AI provider keys for mapping, chat, Vantages, and industry enrichment."
 ---
 
-Syntaxia uses a Bring Your Own Key (BYOK) model for AI. Your organization configures its own LLM API keys from supported providers: Anthropic (Claude), OpenAI (GPT-4o, o3), or xAI (Grok). One provider is active per organization at a time. Usage is tracked per request with token counts and estimated costs.
+Syntaxia uses a Bring Your Own Key (BYOK) model for AI. Your organization configures its own LLM API keys from supported providers: Anthropic (Claude), OpenAI (GPT-4o, o3), or xAI (Grok). One provider is active per organization at a time. Usage is tracked per request with token counts, estimated costs, and the purpose of each call.
+
+## What uses the provider
+
+| Purpose | When it runs |
+|---|---|
+| Mapping proposals | During standardise, for columns that no pack, rule, or precedent recognizes. Each column is asked about once. See [Golden Layer](/guide/golden-layer). |
+| Ask SyntaxIA | Every chat turn, including mapping reviews. See [Ask SyntaxIA](/guide/chat/overview). |
+| Vantage analysis | When a Vantage report is generated or refreshed. |
+| Industry enrichment | For companies missing a classification in the selected taxonomy. See [Industry classification](/guide/chat/industry-classification). |
+
+Without an active provider, the chat shows a provider gate instead of a composer, unrecognized columns stay unmapped until a person decides them, and industry enrichment does not run.

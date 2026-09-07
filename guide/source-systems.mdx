@@ -36,30 +36,26 @@ The source card uses color and motion to telegraph state without you having to r
 | Visual | Meaning |
 |---|---|
 | Green dot, steady | `active`. Data is flowing. |
-| Cyan dot, pulsing | Work in progress: syncing, processing, or running ontology discovery. |
+| Cyan dot, pulsing | Work in progress: syncing, mapping source fields, or building golden records. |
 | Amber dot, pulsing | Needs setup: `pending`, `authorizing`, or `error`. |
 | Amber dot, steady | `paused`. The connector is intentionally paused. |
-| Red dot, pulsing | `error` or ontology discovery failed. Action needed. |
+| Red dot, pulsing | `error` or a failed processing run. Action needed. |
 
 ## Actions on a source
 
-The actions available on a source depend on your function and role. See [Source card scoping](/guide/source-card-scoping) for the full matrix.
+The actions available on a source depend on your pillar and role. See [Source card actions](/guide/source-card-actions) for the full matrix.
 
 ### Resync
 
-Pulls the latest changes from the source platform on demand. Use this when you want fresher data than the next scheduled sync. Available to any Data Ops user. Uploaded sources have no resync; their equivalent is a re-upload.
+Pulls the latest changes from the source platform on demand. Use this when you want fresher data than the next scheduled sync. Available to any member who holds the Data pillar. Uploaded sources have no resync; their equivalent is a re-upload.
 
 ### Re-upload
 
-Uploaded sources only. Ingests a newer export zip as a new point-in-time snapshot on the same source. Earlier snapshots are preserved, so Time Machine can travel across them. Available to any Data Ops user, the same as resync.
+Uploaded sources only. Ingests a newer export zip as a new point-in-time snapshot on the same source. Earlier snapshots are preserved, so Time Machine can travel across them. Available to any member who holds the Data pillar, the same as resync.
 
 ### Reprocess
 
-Re-runs the staging and counting steps over the data you already have, without pulling new data from the source. Useful after a pipeline upgrade or to recover from a stale count. Restricted to Data Ops admins and owners.
-
-### Run ontology discovery
-
-Kicks off a fresh [ontology discovery](/guide/ontology-discovery) run for the source. Requires an active [AI provider](/guide/ai-providers) for your organization. Restricted to Data Ops admins and owners.
+Re-runs the staging and counting steps over the data you already have, without pulling new data from the source. Useful after a pipeline upgrade or to recover from a stale count. Restricted to owners and admins who hold the Data pillar.
 
 ### Reconnect
 
@@ -93,8 +89,8 @@ Uploaded Salesforce sources count toward the Salesforce slots shown on the **Add
 
 When a source is active, your data lives in two places:
 
-- **Staged data** in Syntaxia's pipeline (object storage and a counting database). This is what powers the record counts and downstream ontology pipeline. See [Data pipeline](/guide/data-pipeline) for the full path.
-- **Source metadata** in Syntaxia's application database: the label, status, sync timestamps, and ontology snapshots.
+- **Staged data** in Syntaxia's pipeline (object storage and a counting database). This is what powers the record counts and the golden layer. See [Data pipeline](/guide/data-pipeline) for the full path.
+- **Source metadata** in Syntaxia's application database: the label, status, sync timestamps, mapping decisions, and sign-off.
 
 Disconnecting a source preserves both. Purging deletes both.
 

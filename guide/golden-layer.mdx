@@ -1,0 +1,91 @@
+---
+title: "Golden Layer"
+description: "The model Syntaxia builds from your sources, how source fields map onto it, and how you review the mapping."
+---
+
+The Golden Layer is the console in the Data pillar where Syntaxia's model of your business meets your sources. Every connected source is profiled, every column is mapped onto one canonical model, and the result is the golden record that every other console reads. The console exists to answer two questions about that mapping: is this one right, and should that column have mapped.
+
+## The model
+
+Syntaxia holds one model for every organization. It has thirteen nodes in two trees.
+
+| Family | Nodes | What they cover |
+|---|---|---|
+| Company | Company, Account, Location, Industry, Deal | The business itself, the CRM record about it, the places it operates from, how it is classified, and the deals against it. |
+| Person | Person, Lead, Seller, Contact | The human, and the CRM records that know them. |
+| Standalone | Line, Campaign, Product, Activity | Products on a deal, marketing programs, what you sell, and the work sellers log. |
+
+Each node carries a set of canonical attributes, grouped into sections such as Identity, Identifiers, Firmographics, Corporate hierarchy, Address, and Where it stands. The sections are part of the model: a ladder says the order means something, a grid says the attributes are peers, and the Industry section shows the [taxonomy model](/guide/chat/industry-classification).
+
+Sources never change the model. They feed it.
+
+## How a source is mapped
+
+Mapping happens in the standardise step, the head of the [processing chain](/guide/data-pipeline). It runs when a source finishes a sync or ingest and its turn in the processing queue arrives, and again whenever someone reprocesses the source. The source card reads **Mapping source fields** while it runs.
+
+For each column Syntaxia profiles fill rate, distinct count, and sample values, then decides which canonical attribute the column feeds. Four layers run, cheapest first.
+
+1. **Pack.** A vendored dictionary for the source type. A standard Salesforce field on a standard object is recognized outright. Packs are also the only layer that can say a column is real but has no home, or is bookkeeping.
+2. **Rule.** An exact column name Syntaxia already knows.
+3. **Precedent.** A column name your organization has mapped before, including decisions people made in a review.
+4. **Model.** Nothing recognized it, so the column is sent to your organization's [AI provider](/guide/ai-providers) once, with its profile, and the answer is recorded so precedent handles it next time. A narrow fifth pass asks only whether a leftover is another spelling of a key already mapped.
+
+A run where nothing new appeared makes no model calls, so reprocessing is reproducible. Each decision lands in one of three states.
+
+| State | Meaning |
+|---|---|
+| Applied | Feeds everything downstream. |
+| Provisional | Flows, but is withheld from identity resolution, reconciled counts, and completeness until a person confirms it. |
+| Declined | Stays unmapped and fully visible in the inventory, with the reason and who or what declined it. |
+
+Declining costs nothing. A declined column is still profiled and still visible. Nothing is dropped.
+
+## Reading the console
+
+Open **Data** > **Golden Layer**. Sources sit on the left, the model on the right, and the mapping is drawn as curves between them. Hover a source column or a model attribute to light only its edges.
+
+- **The map.** The two trees across the top. Click a node to open its page. Each page shows the node's sections with a filled-of-total count per section, and a dashed card for every attribute nothing feeds yet.
+- **Complete.** The share of the golden record that has at least one source feeding it. The header figure is for the whole record. The gold frame on a node page is for that node.
+- **Unmapped.** Every profiled column that reaches no attribute, grouped by the table it came from. The view separates columns nobody has answered from columns someone declined with a reason, so the count of remaining work is honest.
+- **Needs you.** The short list a person has to decide. It has three sections, ranked by how cheap the decision is: **Proposed, not certain** for provisional mappings that need a yes or no, **Collisions** for two columns feeding one attribute with nothing to rank them, and **Not placed** for columns carrying data that reach nothing.
+- **Provenance.** Expand any mapped attribute to see which source column feeds it, at what fill, and a few real sample values read from the source.
+
+If no source has been standardised yet, the console says so and asks you to reprocess a source. An untouched organization does not look like a broken one.
+
+## Review a source with the agent
+
+The way to act on the queue is a conversation. Each source in the rail carries a **Review with the agent** button, and the **Needs you** list offers the same. Pressing it opens a mapping review thread in the chat panel, scoped to that one source.
+
+The thread opens with a statement of measured fact composed on the server: how many provisional mappings, collisions, and unplaced columns the source holds, with the ranked head of each list and the evidence behind it. From there you work through the queue in plain language.
+
+- "Map billing city to the account's city."
+- "Decline the legacy score column, it is deprecated."
+- "Remember that fields ending in `__old` are retired."
+
+The agent proposes, and it names its evidence: fill, distinct count, and samples. It stages what you ask for and nothing else. Nothing it stages is written. A staged set shows in the review tray as **Staged, not written** until an admin approves it.
+
+Three kinds of correction can be staged. A **map** names the attribute a column should feed, optionally with a translation of its values. A **decline** records that a column should not map, with a reason. A **memory** line adds standing context to your organization's mapping prompt so future runs know it.
+
+### Approve and rebuild
+
+An owner or admin who holds the Data pillar approves a staged set from the console with **Approve corrections**. Approval takes the exact set you read. It is all or nothing: a refusal on one row leaves nothing half written, and the refused row is marked so you can see why.
+
+Approved corrections take effect on the next standardise pass. The console shows them as approved and not yet rebuilt, with a **Rebuild now** button that reprocesses the source ahead of the [processing schedule](/guide/chat/processing-schedule).
+
+### Sign off
+
+When a source's queue is empty and a finished run stands behind its profile, an owner or admin can sign it off. Sign-off is the statement "I understand this source". The rail records who signed and when, and later stages read it as permission to act on the source. Sign-off is refused while the queue still has work, or when no completed run stands behind the profile.
+
+## Across sources
+
+Every source maps onto the same model, so two CRMs that describe the same customer land on the same attributes. Identity resolution then groups the mentions from every source into one resolved company, using register keys such as ZoomInfo and D&B identifiers, corporate hierarchy, and name and domain evidence. The [Accounts console](/guide/source-systems) and every command center read those resolved records, not the individual source rows.
+
+## Who can do what
+
+| Action | Data pillar member | Owner or admin with Data pillar |
+|---|---|---|
+| Read the console and open a review | Yes | Yes |
+| Stage corrections in a review | Yes | Yes |
+| Approve corrections | No | Yes |
+| Rebuild a source | No | Yes |
+| Sign off a source | No | Yes |
