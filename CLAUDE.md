@@ -138,15 +138,16 @@ Page content here.
 ## Product concepts (for writing docs)
 
 ### Authentication
-Passwordless via magic link codes. No passwords anywhere.
-- Identity: unique email address. Can join multiple organizations.
-- MagicLink: 6-character code (A-Z minus O/I/L, 2-9), 15-minute TTL.
-- Session: browser session tied to an Identity.
+Two mechanisms for humans, and only two: passkeys (primary) and passwordless email codes (fallback). No passwords, no federated sign-in (no Google, Microsoft, Okta, or any IdP). AI agents use MCP tokens, never a person's session.
+- Identity: unique email address. Can join multiple organizations. Passkeys belong to the Identity, so one passkey works across every org.
+- Passkey: WebAuthn, discoverable (resident key required), user verification required, bound to the host domain. Labeled by device (iPhone, iPad, Mac, Windows, Android). Managed in Settings > Profile > Passkeys (add, rename, remove). Offered after any email-code sign-in on a device with no passkey ("Save a passkey for next time?").
+- MagicLink: 6-character code (A-Z minus O/I/L, 2-9), 15-minute TTL, single use. Purposes: signin, signup, invitation.
+- Session: signed HTTP-only permanent cookie tied to an Identity. Records user agent and IP. Sign out destroys it.
 - User: membership record linking Identity to Organization. Roles: owner, admin, member.
 - Organization::JoinCode: team invite code in `XXXX-XXXX-XXXX` format (base58).
 
 ### Auth flows
-1. **Sign in**: enter email, receive 6-char code, enter code, session created
+1. **Sign in**: passkey if the device has one; otherwise enter email, receive 6-char code, enter code, session created, then offered a passkey
 2. **Sign up**: enter email (must be whitelisted domain), verify code, enter name + org name, org created with user as owner
 3. **Join via invite**: visit `/join/:code`, enter email, verify code, enter name, user added as member
 

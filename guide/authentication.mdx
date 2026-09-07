@@ -1,6 +1,55 @@
 ---
 title: "Authentication"
-description: "How passwordless authentication works in Syntaxia."
+description: "How Syntaxia authenticates people: passkeys first, email codes as the fallback, and nothing else."
 ---
 
-Syntaxia uses passwordless authentication through magic link codes. When you sign in, you enter your email and receive a 6-character verification code. Codes use uppercase letters (excluding O, I, L) and digits 2 through 9 to avoid ambiguity. Each code expires after 15 minutes. Your session is tied to your browser and your identity (email address).
+Syntaxia has two ways for a person to sign in, and only two. **Passkeys** are the primary mechanism. **Email codes** are the fallback. There are no passwords to set, store, or reset, and no federated login through a third-party identity provider. Both choices are deliberate: a password can be phished or reused, and a federation adds a party whose security you do not control.
+
+## Identity, session, and organization
+
+Your **identity** is your email address. One identity can belong to many organizations, and your passkeys travel with the identity, so a passkey you save once signs you in to every organization you are a member of.
+
+A **session** is your browser's signed-in state, tied to your identity. It is stored as a signed, HTTP-only cookie. Each session records the browser and IP address it was started from. Signing out destroys it. There is no fixed expiry, so you stay signed in on a device until you sign out.
+
+## Passkeys
+
+A passkey is a cryptographic credential stored by your device or password manager and unlocked with Face ID, Touch ID, Windows Hello, a device PIN, or your phone. Syntaxia uses the WebAuthn standard. The private key never leaves your authenticator, and the server holds only the public half, so there is nothing to phish and nothing that a data breach could replay.
+
+Syntaxia requires two properties on every passkey:
+
+- **Discoverable.** The passkey stores your identity, so you sign in without typing your email first.
+- **User verification.** Your authenticator must confirm it is you, with biometrics or a PIN, on every use.
+
+Passkeys are bound to the domain you registered them on. A passkey saved on `app.syntaxia.com` works only there.
+
+### Sign in with a passkey
+
+On the sign-in page, your browser offers your saved passkey as soon as the page loads, either in the email field's autofill or through the **passkey** button. Confirm with your device and you are in. If no passkey is available on the device, the page says so and you can email a code instead.
+
+### Save a passkey
+
+The first time you sign in with an email code on a device that has no passkey yet, Syntaxia asks **Save a passkey for next time?**. Accept to register one on the spot, or skip and continue. You can also add one at any time from **Settings** > **Profile** under **Passkeys**.
+
+Each passkey is labeled by the device that created it, such as iPhone, Mac, or Windows. From the same card you can rename or remove any passkey. Removing the last one does not lock you out. Email codes still work.
+
+## Email codes
+
+When you have no passkey on the device you are using, sign in with a one-time code sent to your email.
+
+1. Enter your email address.
+2. Syntaxia emails you a 6-character code.
+3. Enter the code to start your session.
+
+Codes use uppercase letters, excluding O, I, and L, and the digits 2 through 9, so no character can be misread for another. A code is single use and expires after 15 minutes. If it has not arrived, use **Resend** on the verification page to get a new one.
+
+The same code flow verifies your email when you [sign up](/get-started/sign-in) and when you join an organization through an invite link.
+
+## What Syntaxia does not do
+
+- **No passwords.** There is nothing to choose, remember, rotate, or reset.
+- **No federated sign-in.** Syntaxia does not sign you in through Google, Microsoft, Okta, or any other identity provider.
+- **No shared secrets between organizations.** Membership is per organization. Your credentials are yours alone.
+
+## Access for AI agents and integrations
+
+People sign in with passkeys or email codes. AI agents and other software connect to Syntaxia through the MCP server with their own scoped tokens, never with a person's session. See [MCP server](/guide/mcp).

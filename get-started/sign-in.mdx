@@ -1,6 +1,41 @@
 ---
 title: "Sign in"
-description: "Sign in to Syntaxia with a passwordless magic link."
+description: "Sign in to Syntaxia with a passkey, or with a one-time code sent to your email."
 ---
 
-Syntaxia uses passwordless authentication. Enter your email address, and you will receive a 6-character verification code. Enter the code to start your session. Codes expire after 15 minutes.
+Syntaxia has no passwords. You sign in with a **passkey** when you have one on the device, and with a **one-time email code** when you do not. Both start the same session.
+
+## Sign in with a passkey
+
+<Steps>
+  <Step title="Open the sign-in page">
+    Go to [app.syntaxia.com](https://app.syntaxia.com). If you have a passkey on this device, your browser offers it right away, in the email field or through the **passkey** button.
+  </Step>
+  <Step title="Confirm with your device">
+    Approve with Face ID, Touch ID, Windows Hello, or your device PIN. You are signed in.
+  </Step>
+</Steps>
+
+## Sign in with an email code
+
+<Steps>
+  <Step title="Enter your email">
+    Type your email address and continue. Syntaxia sends a 6-character code to that address.
+  </Step>
+  <Step title="Enter the code">
+    Type the code on the verification page. It is single use and expires after 15 minutes. Use **Resend** if it has not arrived.
+  </Step>
+  <Step title="Save a passkey">
+    On a device with no passkey yet, Syntaxia asks **Save a passkey for next time?**. Accept to skip the email step next time, or skip and continue.
+  </Step>
+</Steps>
+
+## Sign up
+
+New to Syntaxia? Choose **Sign up** on the sign-in page, verify your email with the same code flow, then enter your name and your organization's name. You become that organization's owner. To join an organization someone else created, use the invite link they send you instead.
+
+## Manage your passkeys
+
+Open **Settings** > **Profile**. The **Passkeys** card lists every passkey on your identity, labeled by the device that created it. Add, rename, or remove them there. Passkeys belong to you, not to an organization, so one passkey signs you in everywhere you are a member.
+
+For how the two mechanisms work and why there are only two, see [Authentication](/guide/authentication).
