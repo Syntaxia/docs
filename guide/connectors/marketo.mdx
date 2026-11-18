@@ -1,0 +1,154 @@
+---
+title: "Marketo"
+description: "Connect a Marketo instance to Syntaxia."
+---
+
+The Marketo connector links an Adobe Marketo Engage instance to Syntaxia. Use it to bring your people, activities, programs, and lists into Syntaxia once a day. The connector reads Marketo through its API with a client ID and a client secret that your Marketo admin creates.
+
+<Info>
+Marketo is currently available as a data connector. Mapping Marketo records onto the golden layer is on the roadmap. You can connect today and your data will be staged in the pipeline. Model coverage will be enabled in a future release.
+</Info>
+
+## Before you start
+
+- You are signed in to Syntaxia and hold the **Data** pillar.
+- You have a Marketo **Admin** account, or a Marketo admin can complete the Marketo steps with you.
+- You know which other integrations use your Marketo API. The sync shares their daily quota. See [API quota](#api-quota).
+
+<Tip>
+Marketo instances are unlimited per Syntaxia organization. Connect each instance once. A second connection to the same instance spends its API quota twice.
+</Tip>
+
+## What syncs
+
+Syntaxia sets no table limit and no history limit, so the connector syncs everything it offers for your instance.
+
+| Data | Notes |
+|---|---|
+| People | Every person record in your instance |
+| Activities | One table per activity type, such as email sends, opens, and clicks |
+| Programs | Programs and their memberships |
+| Lists | Static lists and their memberships |
+| Segments | Segments and the people in them |
+
+A table is created only when Marketo returns data for it.
+
+### How history arrives
+
+The first sync brings the most recent seven days. Later syncs bring the newest changes first, then fill in older history until they reach the limit of what Marketo keeps.
+
+| Marketo keeps | For |
+|---|---|
+| Standard activities | 25 months |
+| High-volume activities | 90 days |
+| Activities of deleted people | 14 days |
+
+Marketo can delete activity after these periods. Syntaxia keeps what it has already synced.
+
+## Prepare Marketo
+
+A Marketo admin completes these steps once, in Marketo. They produce the four values the connection form asks for.
+
+<Steps>
+  <Step title="Create an API role">
+    In Marketo, go to **Admin**, then **Users & Roles**, then **Roles**, and click **New Role**. Give the role a name like `Syntaxia API`. Under **Access API**, select the **Read-Only** permissions: Activity, Activity Metadata, Assets, Campaign, Company, Custom Object, Lead, Named Account, Named Account List, Opportunity, and Sales Person.
+
+    Only the permissions under **Access API** apply to an API user.
+  </Step>
+  <Step title="Create an API-only user">
+    Go to **Admin**, then **Users & Roles**, then **Users**, and click **Invite New User**. Enter a name and an email address that describe the integration. Select the **API Only** checkbox, assign the role you created, and click **Send**.
+  </Step>
+  <Step title="Create a custom service">
+    Go to **Admin**. Under **Integration**, click **LaunchPoint**, then click **New Service**. Give the service a name, select **Custom** in the **Service** list, add a description, select your API-only user in the **API Only User** list, and click **Create**.
+  </Step>
+  <Step title="Copy the client ID and the client secret">
+    In the **LaunchPoint** list, find your service and click **View Details**. Copy the **Client Id** and the **Client Secret**.
+  </Step>
+  <Step title="Copy the endpoint and the identity address">
+    Go to **Admin**. Under **Integration**, click **Web Services**. In the **REST API** section, copy the **Endpoint** and the **Identity** values. They look like `https://123-ABC-456.mktorest.com/rest` and `https://123-ABC-456.mktorest.com/identity`.
+  </Step>
+</Steps>
+
+<Warning>
+The client secret gives read access to your Marketo data. Send it to the person who connects Syntaxia through a secure channel, not by email or chat.
+</Warning>
+
+## Connect Marketo
+
+<Steps>
+  <Step title="Add the source">
+    From Source Management in the Data pillar, click **Add Source**, expand the **Marketo** card, and enter a connection label like `Marketo - Production`.
+  </Step>
+  <Step title="Open the connection form">
+    Click **Connect**. A secure page hosted by our managed pipeline partner, Fivetran, opens. It reads "Syntaxia uses Fivetran to connect to Marketo". Click **Continue** to reach the Marketo form.
+  </Step>
+  <Step title="Enter the Marketo values">
+    | Field | What to enter |
+    |---|---|
+    | **REST API Endpoint** | The **Endpoint** value from Web Services |
+    | **REST API Identity** | The **Identity** value from Web Services |
+    | **REST API Call Limit** | Optional. Leave it blank, or see [API quota](#api-quota) |
+    | **Client Id** | The **Client Id** of your custom service |
+    | **Client secret** | The **Client Secret** of your custom service |
+    | **Historical sync time frame** | Leave **Sync all historical data** selected |
+    | **Sync Late Arriving Activities** | Leave it off, or see [API quota](#api-quota) |
+
+    You enter these values on Fivetran's form. Syntaxia does not store them.
+
+    The **Supports updatedAt in BULK export?** button is optional. It checks whether your subscription lets the connector read only the records that changed. Most subscriptions do.
+  </Step>
+  <Step title="Save and test">
+    Click **Save & Test**. The test checks the endpoint, the credentials, and the permissions of your API role. It can take a couple of minutes.
+  </Step>
+  <Step title="Return to Syntaxia">
+    When the test passes, you return to your command center. The new source card shows status `syncing`. If you are not sent back, open your command center yourself.
+  </Step>
+  <Step title="Wait for the first sync">
+    The card switches to `active` once the first sync completes. After that, Marketo syncs once a day on its own.
+  </Step>
+</Steps>
+
+<Note>
+**Save for later** keeps what you typed and leaves you on the form. To continue later, return to your command center and click **Complete setup** on the Marketo card.
+</Note>
+
+## API quota
+
+The sync spends your own Marketo API quota. Marketo shares that quota between every integration that uses your instance's API.
+
+- **Daily limits.** Most Marketo subscriptions allow 50,000 API calls a day and 500 MB of bulk export a day. To see your recent usage, go to **Admin** in Marketo and click **Web Services** under **Integration**.
+- **The first syncs use the most.** They load your history. The daily syncs that follow read only what changed.
+- **REST API Call Limit.** To keep room for your other integrations, enter a daily number of calls in this field. The connector stops at that number each day. The form accepts 1,000 or more, and it recommends at least 8,000.
+- **Sync Late Arriving Activities.** Marketo can be late to process some activities. With this option on, each sync reads the last three days of activities again. It can double the bulk export quota that the daily activity sync uses.
+
+If the quota runs out, a sync cannot finish that day. Marketo resets the API call quota every day at 12:00 AM Central Time.
+
+## After the first sync
+
+Once your Marketo source is `active`, you can:
+
+- **Resync** at any time to pull the latest changes ahead of the daily sync.
+- **Pause autosync** to stop the daily sync and keep your data, then resume when you are ready.
+- **Reconnect** when the card is in `error`, for example after the client secret changes. You enter the new value on the same form.
+
+See [Source systems](/guide/source-systems) for the full lifecycle of a source.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The connection test fails">
+    Check that the **Endpoint** and the **Identity** values are not swapped and that each one is copied whole. Check that the client ID and the client secret come from the custom service of your API-only user. Then click **Save & Test** again. If you already left the form, click **Reconnect** or **Complete setup** on the Marketo card to open it again.
+  </Accordion>
+  <Accordion title="The test reports a missing permission">
+    The API role does not cover an endpoint the connector reads. In Marketo, add the permission the test names to the role under **Access API**, then run the test again.
+  </Accordion>
+  <Accordion title="I closed the form before I finished">
+    The Marketo card stays on your command center and waits for authorization. Click **Complete setup** on the card to open the form again.
+  </Accordion>
+  <Accordion title="The card is in `error`">
+    The connection or the last sync failed. Common causes are a new client secret in Marketo, or an API user or role that was removed. Click **Reconnect** to enter new values.
+  </Accordion>
+  <Accordion title="Some older activity is missing">
+    Marketo keeps high-volume activities for 90 days and the activities of deleted people for 14 days. Activity that Marketo deleted before your first sync cannot be synced.
+  </Accordion>
+</AccordionGroup>
