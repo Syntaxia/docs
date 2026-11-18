@@ -61,6 +61,7 @@
               "guide/connectors/hubspot",
               "guide/connectors/pipedrive",
               "guide/connectors/power-bi",
+              "guide/connectors/marketo",
               "guide/connectors/crm-export-upload"
             ]
           },
