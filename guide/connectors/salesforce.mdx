@@ -9,8 +9,8 @@ The Salesforce connector links a production Salesforce org to Syntaxia. Use it f
 
 Confirm the following before opening the **Add Source** screen.
 
-- You are signed in to Syntaxia and hold the **Data** pillar.
-- Your organization has fewer than **4 active Salesforce connections**. Salesforce production is capped per org.
+- You are signed in to Syntaxia as an owner or an admin, and you hold the **Data** pillar.
+- Your organization has fewer than **4 live Salesforce production connections**. Salesforce production is capped per org. An export upload or a sandbox does not use one of the four.
 - You have, or can borrow, a Salesforce user with the **API Enabled** profile permission. The user does not need to be a System Administrator, but they must have read access to the objects you want Syntaxia to see.
 - The user can authorize the connected app: either the app is already installed in your org, or the user has the **Approve Uninstalled Connected Apps** permission. See [Connected app access](#connected-app-access).
 - Pop-ups are not blocked for `app.syntaxia.com`. The authorization window opens in a redirect.
@@ -38,7 +38,7 @@ Custom fields on these objects are also synced. Custom objects are not yet suppo
 
 <Steps>
   <Step title="Add the source">
-    From Source Management in the Data pillar, click **Add Source**, expand the **Salesforce** card, and enter a connection label. We recommend something like `Salesforce - Production` or `Salesforce - HQ` so it is easy to identify on the command center.
+    From Source Management in the Data pillar, click **Add Source** and expand the **Salesforce** card. The card has three choices: **Production**, **Sandbox**, and **Export upload**. Under **Production**, enter a **Source name**. We recommend something like `Salesforce - Production` or `Salesforce - HQ` so it is easy to identify on the command center.
   </Step>
   <Step title="Authorize Syntaxia">
     Click **Connect**. You will be redirected to the Salesforce login page. Sign in with your integration user, then click **Allow** on the OAuth consent screen.
@@ -96,7 +96,7 @@ Once your Salesforce source is `active`, you can:
     Salesforce reported a broken connection. The integration user's password may have changed, the OAuth grant may have been revoked, or API access may have been removed. Click **Reconnect** and re-authorize.
   </Accordion>
   <Accordion title="No slots available">
-    Your organization has 4 active Salesforce production connections. Disconnect and purge an unused source to free a slot, or contact [support@syntaxia.com](mailto:support@syntaxia.com) to discuss raising the limit.
+    Your organization has 4 live Salesforce production connections, so the **Production** choice shows `0 of 4 slots`. A paused connection still holds its slot. Disconnect and purge an unused source to free a slot, or contact [support@syntaxia.com](mailto:support@syntaxia.com) to discuss raising the limit.
   </Accordion>
   <Accordion title="The first sync seems too small">
     Verify the integration user's object-level read access in Salesforce. Records the user cannot see in Salesforce will not appear in Syntaxia.

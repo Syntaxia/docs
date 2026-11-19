@@ -9,7 +9,7 @@ Syntaxia has two ways for a person to sign in, and only two. **Passkeys** are th
 
 Your **identity** is your email address. One identity can belong to many organizations, and your passkeys travel with the identity, so a passkey you save once signs you in to every organization you are a member of.
 
-A **session** is your browser's signed-in state, tied to your identity. It is stored as a signed, HTTP-only cookie. Each session records the browser and IP address it was started from. Signing out destroys it. There is no fixed expiry, so you stay signed in on a device until you sign out.
+A **session** is your browser's signed-in state, tied to your identity. It is stored as a signed, HTTP-only cookie. Each session records the browser and IP address it was started from. Signing out destroys it. A session lasts up to 30 days, and ends sooner when you have not used Syntaxia for 7 days. Then you sign in again.
 
 ## Passkeys
 
@@ -37,10 +37,10 @@ Each passkey is labeled by the device that created it, such as iPhone, Mac, or W
 When you have no passkey on the device you are using, sign in with a one-time code sent to your email.
 
 1. Enter your email address.
-2. Syntaxia emails you a 6-character code.
+2. Syntaxia emails you a 6-character code. The email's subject is "Your Syntaxia sign-in code", and the code is inside the email, not in the subject.
 3. Enter the code to start your session.
 
-Codes use uppercase letters, excluding O, I, and L, and the digits 2 through 9, so no character can be misread for another. A code is single use and expires after 15 minutes. If it has not arrived, use **Resend** on the verification page to get a new one.
+Codes use uppercase letters, excluding O, I, and L, and the digits 2 through 9, so no character can be misread for another. A code is single use, works only for the email address that asked for it, and expires after 15 minutes. If it has not arrived, use **Resend** on the verification page to get a new one.
 
 The same code flow verifies your email when you [sign up](/get-started/sign-in) and when you join an organization through an invite link.
 

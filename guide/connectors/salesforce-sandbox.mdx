@@ -9,7 +9,7 @@ For production orgs, use the [Salesforce](/guide/connectors/salesforce) connecto
 
 ## Before you start
 
-- You are signed in to Syntaxia and hold the **Data** pillar.
+- You are signed in to Syntaxia as an owner or an admin, and you hold the **Data** pillar.
 - You know which sandbox you want to connect: developer, partial copy, or full copy.
 - You have a Salesforce sandbox user with **API Enabled** and read access to the objects you want to sync.
 - The sandbox user can authorize the connected app: either the app is installed in the sandbox, or the user has the **Approve Uninstalled Connected Apps** permission. The [connected app access](/guide/connectors/salesforce#connected-app-access) requirement applies to sandboxes the same as to production.
@@ -38,7 +38,7 @@ Custom fields are synced. Custom objects are not yet supported.
 
 <Steps>
   <Step title="Add the source">
-    From Source Management in the Data pillar, click **Add Source**, expand the **Salesforce Sandbox** card, and enter a connection label that names the sandbox, for example `Salesforce - UAT` or `Salesforce - DevSandbox`.
+    From Source Management in the Data pillar, click **Add Source** and expand the **Salesforce** card. Under **Sandbox**, enter a **Source name** that names the sandbox, for example `Salesforce - UAT` or `Salesforce - DevSandbox`.
   </Step>
   <Step title="Authorize on the sandbox login page">
     Click **Connect**. Syntaxia redirects you to `test.salesforce.com`. Sign in with your sandbox user, including the sandbox suffix in the username, then click **Allow** on the OAuth consent screen.

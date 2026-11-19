@@ -13,7 +13,7 @@ Power BI is currently available as a data connector. Mapping Power BI artifacts 
 
 Connecting Power BI requires a one-time setup in the Microsoft Entra admin center and the Power BI admin portal. You will need access to both.
 
-- You are signed in to Syntaxia and hold the **Data** pillar.
+- You are signed in to Syntaxia as an owner or an admin, and you hold the **Data** pillar.
 - You have **Microsoft Entra ID** admin rights, or someone who does can complete the Azure steps with you.
 - You have **Power BI tenant administrator** access, or someone who does can toggle the required admin settings.
 - Your Power BI tenant uses a **Pro**, **Premium**, or **Fabric** capacity. These tiers expose the admin APIs Syntaxia reads from.
@@ -114,7 +114,7 @@ At minimum, add the security group as a **Member** of the workspaces you plan to
 
 <Steps>
   <Step title="Add the source">
-    From Source Management in the Data pillar, click **Add Source**, expand the **Power BI** card, and enter a connection label like `Power BI - Finance` or `Power BI - GTM`.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Power BI** card, and enter a **Source name** like `Power BI - Finance` or `Power BI - GTM`.
   </Step>
   <Step title="Enter your credentials">
     Paste the three values you collected in Stage 1:

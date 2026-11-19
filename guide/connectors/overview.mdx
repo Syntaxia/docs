@@ -3,11 +3,11 @@ title: "Connectors overview"
 description: "Browse the source systems Syntaxia connects to and how the connection flow works."
 ---
 
-A **connector** is the integration between Syntaxia and one of your source systems. You add connectors from the **Add Source** screen in the Data pillar, and each one becomes a source card on your command center once it is active.
+A **connector** is the integration between Syntaxia and one of your source systems. You add connectors from the **Add Source** screen in the Data pillar, and each one becomes a source card on your command center once it is active. The screen shows one list of sources. The same list opens from **Add source** in the Desk's **Sources** panel and from **Add Source** in **Settings**.
 
 Syntaxia uses a managed data integration layer to run every connector, so the steps to add a source are nearly identical across CRMs. You authorize Syntaxia on the source platform, your data lands in our pipeline, and your source card moves from `pending` to `active` once the first sync completes.
 
-You can also add a source without any connector at all. The **Upload a CRM export** card ingests a Salesforce export zip through the same pipeline as a live connection. See [Upload a CRM export](/guide/connectors/crm-export-upload).
+You can also add a source without any connector at all. The **Export upload** choice in the **Salesforce** card ingests a Salesforce export zip through the same pipeline as a live connection. See [Upload a CRM export](/guide/connectors/crm-export-upload).
 
 ## Supported sources
 
@@ -61,13 +61,13 @@ Every connector follows the same five-step pattern. The only thing that changes 
 
 <Steps>
   <Step title="Open the Add Source screen">
-    From Source Management in the Data pillar, click **Add Source**. You must hold the Data pillar. Members, admins, and owners can all add sources.
+    From Source Management in the Data pillar, click **Add Source**. You must hold the Data pillar and be an owner or an admin. Members cannot add sources.
   </Step>
   <Step title="Pick the connector">
-    Choose Salesforce, Salesforce Sandbox, HubSpot, Pipedrive, or Power BI from the **Available** list.
+    Expand the card for your source in the **Available** list: Salesforce, HubSpot, Pipedrive, Power BI, or Marketo. Salesforce is one card with three choices: **Production**, **Sandbox**, and **Export upload**.
   </Step>
   <Step title="Name the connection">
-    Enter a connection label like `Salesforce - Production` or `HubSpot - EMEA`. Labels help you tell sources apart on the command center, especially when an organization runs multiple instances of the same CRM.
+    Enter a **Source name** like `Salesforce - Production` or `HubSpot - EMEA`. The name is required and can hold at most 150 characters. Names help you tell sources apart on the command center, especially when an organization runs multiple instances of the same CRM.
   </Step>
   <Step title="Authorize on the source platform">
     Click **Connect**. Syntaxia opens a secure authorization window hosted by our managed pipeline partner. Sign in to the source platform and approve the requested scopes. You will be redirected back to Syntaxia automatically.
@@ -77,20 +77,24 @@ Every connector follows the same five-step pattern. The only thing that changes 
   </Step>
 </Steps>
 
+<Note>
+If you close the **Add Source** screen or leave the page after you type a source name or select files, Syntaxia asks before it discards them.
+</Note>
+
 ## Required role
 
 Adding, reconnecting, or removing a source requires the **Data** pillar. Within the Data pillar:
 
 - **Members** can resync, reconnect, and disconnect sources, and re-upload exports on uploaded sources.
-- **Admins** and **owners** can additionally trigger reprocessing, approve mapping corrections, and sign off a source.
+- **Admins** and **owners** can additionally add a source, trigger reprocessing, approve mapping corrections, and sign off a source.
 
-If you do not see the **Add Source** button, you are either not in the Data pillar or your role does not permit it. See [Pillars](/guide/pillars) and [Source card actions](/guide/source-card-actions) for the full role matrix.
+If you do not see the **Add Source** button, you do not hold the Data pillar. A member who holds it can open the **Add Source** screen, but each connector there reads "Only admins can add this." in place of its form. See [Pillars](/guide/pillars) and [Source card actions](/guide/source-card-actions) for the full role matrix.
 
 ## Per-source limits
 
-Most connectors are unlimited per organization. Salesforce production is capped at **4 active connections** per org. The **Add Source** screen shows remaining slots next to the Salesforce entry, and the form is disabled when you reach the cap. Disconnecting a source frees a slot only after the source is purged.
+Most connectors are unlimited per organization. Salesforce production is capped at **4 live connections** per org. The **Add Source** screen shows the remaining slots next to the **Production** choice in the Salesforce card. When you reach the cap, that choice shows `0 of 4 slots` in place of its form. Disconnecting a source frees a slot only after the source is purged.
 
-Uploaded Salesforce sources count toward the slots shown on the **Add Source** screen, but the cap only disables new OAuth connections. Uploads are never blocked.
+Only live connections count toward the cap. An uploaded Salesforce source does not use a slot, and neither does a Salesforce sandbox. The cap never blocks an upload.
 
 ## What happens to your data
 
