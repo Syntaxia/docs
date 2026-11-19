@@ -13,8 +13,8 @@ An uploaded source is a point-in-time snapshot, not a live sync. The data is as 
 
 ## Before you start
 
-- You are signed in to Syntaxia and hold the **Data** pillar.
-- You have a Salesforce export zip. The standard weekly or monthly export from Salesforce Setup (**Setup > Data Export**) works as is: a zip of CSV files named after their objects, like `Account.csv` and `Opportunity.csv`. Zips that nest the CSVs one folder deep also work.
+- You are signed in to Syntaxia as an owner or an admin, and you hold the **Data** pillar.
+- You have a Salesforce export zip. The standard weekly or monthly export from Salesforce Setup (**Setup > Data Export**) works as is: a zip of CSV files named after their objects, like `Account.csv` and `Opportunity.csv`. Zips that nest the CSVs one folder deep also work. One upload holds at most 25 GB, all its zips together.
 - Salesforce is the only supported CRM for uploads today. Support for other CRM exports is planned.
 
 ## What gets ingested
@@ -42,13 +42,13 @@ Uploads ingest standard fields only. Syntaxia does not read custom fields from a
 
 <Steps>
   <Step title="Open the upload card">
-    From Source Management in the Data pillar, click **Add Source**. The **Upload a CRM export** card is at the top of the picker.
+    From Source Management in the Data pillar, click **Add Source**, expand the **Salesforce** card, and choose **Export upload**.
   </Step>
-  <Step title="Pick the CRM and name the source">
-    Choose **Salesforce** in the CRM picker, then enter a source name like `Salesforce - Weekly Export`. The name is what you see on the command center, so include the export date or cadence if you plan to upload more than one.
+  <Step title="Name the source">
+    Enter a **Source name** like `Salesforce - Weekly Export`. The name is what you see on the command center, so include the export date or cadence if you plan to upload more than one.
   </Step>
   <Step title="Choose the file and start the ingest">
-    Click **Choose File**, select the export zip, and click **Upload and ingest**.
+    Drop the export zips on the upload area, or click it to choose them, then click **Start upload**.
   </Step>
   <Step title="Wait for processing">
     The new source card shows `Processing...` while Syntaxia unzips the export, reshapes it, and runs it through the pipeline. The card reports each phase as it goes, from updating staging tables to resolving accounts. When the ingest finishes, the card turns green and shows the total record count.
